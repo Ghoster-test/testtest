@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Minecraft Fiszki - 296 Słówek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mc-panel: #c6c6c6;
+      --mc-green: #55ff55;
+      --mc-xp: #80ff20;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'VT323', monospace; }
+
+    /* PRAWDZIWE TŁA MINECRAFTA (Biomy) */
+    body {
+      background-color: #121212;
+      background: linear-gradient(rgba(10, 10, 15, 0.72), rgba(10, 10, 15, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+lush+caves+deepslate+landscape+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      touch-action: manipulation;
+      overflow-x: hidden;
+      transition: background 0.4s ease;
+      position: relative;
+    }
+    body.theme-birch {
+      background: linear-gradient(rgba(15, 25, 12, 0.72), rgba(15, 25, 12, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+birch+forest+aesthetic+landscape+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-cherry {
+      background: linear-gradient(rgba(30, 15, 25, 0.72), rgba(30, 15, 25, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+cherry+grove+blossom+landscape+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-desert {
+      background: linear-gradient(rgba(35, 25, 10, 0.72), rgba(35, 25, 10, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+desert+pyramid+village+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-nether {
+      background: linear-gradient(rgba(35, 10, 10, 0.72), rgba(35, 10, 10, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+nether+crimson+forest+landscape+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-deepdark {
+      background: linear-gradient(rgba(5, 15, 20, 0.75), rgba(5, 15, 20, 0.85)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+deep+dark+ancient+city+sculk+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-ocean {
+      background: linear-gradient(rgba(5, 20, 35, 0.75), rgba(5, 20, 35, 0.85)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+coral+reef+ocean+monument+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-snow {
+      background: linear-gradient(rgba(15, 20, 30, 0.72), rgba(15, 20, 30, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+snowy+tundra+ice+spikes+aurora+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+    body.theme-end {
+      background: linear-gradient(rgba(20, 10, 30, 0.72), rgba(20, 10, 30, 0.82)), 
+                  url('https://tse1.mm.bing.net/th?q=minecraft+the+end+dimension+obsidian+pillars+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+
+    #fxCanvas {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* PRZESUWANY ZWIERZAK NA EKRANIE */
+    .draggable-pet {
+      position: fixed;
+      bottom: 75px;
+      right: 20px;
+      font-size: 3.2rem;
+      user-select: none;
+      cursor: grab;
+      z-index: 1500;
+      touch-action: none;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8));
+      animation: petIdleBounce 2.5s infinite ease-in-out;
+      display: none;
+    }
+    .draggable-pet:active {
+      cursor: grabbing;
+      transform: scale(1.18);
+      animation: none;
+    }
+    @keyframes petIdleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Pudełko GUI */
+    .mc-box {
+      background: #c6c6c6;
+      border: 4px solid #000;
+      box-shadow: inset -4px -4px #555555, inset 4px 4px #ffffff;
+      color: #000;
+      padding: 12px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* Przyciski */
+    .mc-btn {
+      background: #7a7a7a;
+      border: 3px solid #000;
+      box-shadow: inset -3px -3px #373737, inset 3px 3px #bbbbbb;
+      color: #ffffff;
+      text-shadow: 2px 2px #000;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 8px 12px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      user-select: none;
+      transition: transform 0.05s;
+    }
+    .mc-btn:active {
+      box-shadow: inset 3px 3px #373737, inset -3px -3px #bbbbbb;
+      transform: translateY(2px);
+    }
+    .mc-btn-red { background: #a82b2b; box-shadow: inset -3px -3px #541414, inset 3px 3px #e05e5e; }
+    .mc-btn-green { background: #2ea82e; box-shadow: inset -3px -3px #145414, inset 3px 3px #5ee05e; }
+    .mc-btn-gold { background: #b8860b; box-shadow: inset -3px -3px #6b4e04, inset 3px 3px #ffd700; color:#fff; }
+    .mc-btn-sub { font-size: 0.85rem; opacity: 0.9; }
+
+    .screen { width: 100%; max-width: 480px; display: none; }
+    .screen.active { display: block; }
+
+    /* Nagłówek */
+    header {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2b2b2b;
+      padding: 6px 10px;
+      border: 2px solid #000;
+      box-shadow: inset -2px -2px #111, inset 2px 2px #555;
+      position: relative;
+    }
+    .user-info { display: flex; flex-direction: column; }
+    .user-tag { font-size: 1.25rem; color: #55ffff; line-height: 1; }
+    .user-rank { font-size: 0.9rem; color: #ffaa00; text-shadow: 1px 1px #000; }
+    .emerald-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #112a14;
+      border: 2px solid #2ea82e;
+      padding: 2px 7px;
+      color: #55ff55;
+      font-size: 1.15rem;
+      border-radius: 4px;
+    }
+
+    /* XP Bar */
+    .xp-section { width: 100%; max-width: 480px; margin-bottom: 8px; }
+    .xp-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; font-size: 1.1rem; }
+    .xp-level-badge { color: #80ff20; text-shadow: 2px 2px #000; font-weight: bold; }
+
+    .xp-bar-container {
+      width: 100%;
+      height: 16px;
+      background: #000;
+      border: 2px solid #444;
+      display: flex;
+      overflow: hidden;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .xp-part-done { background: #55ff55; height: 100%; transition: width 0.3s; }
+    .xp-part-one { background: #ffaa00; height: 100%; transition: width 0.3s; }
+    .xp-part-new { background: #444444; height: 100%; transition: width 0.3s; }
+
+    .mc-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; text-align: center; font-size: 0.95rem; }
+    .stat-pill { background: #222; border: 2px solid #000; padding: 3px 2px; color: #fff; }
+    .stat-pill b { display: block; font-size: 1.25rem; }
+
+    /* Fiszka */
+    .card-wrap {
+      width: 100%;
+      height: 380px;
+      perspective: 1000px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .card-inner.flipped { transform: rotateY(180deg); }
+
+    .card-side {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: rgba(43, 43, 43, 0.92);
+      border: 4px solid #000;
+      box-shadow: inset -4px -4px #151515, inset 4px 4px #4a4a4a;
+      text-align: center;
+      transition: box-shadow 0.2s, border-color 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    .card-back { transform: rotateY(180deg); }
+
+    /* Ramki fiszki (ze Sklepu) */
+    .frame-gold .card-side { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.4), inset -4px -4px #5c4300, inset 4px 4px #ffe766; }
+    .frame-cherry .card-side { border-color: #ff99cc; box-shadow: 0 0 16px rgba(255,153,204,0.45), inset -4px -4px #661a40, inset 4px 4px #ffcce6; }
+    .frame-emerald .card-side { border-color: #55ff55; box-shadow: 0 0 16px rgba(85,255,85,0.45), inset -4px -4px #145414, inset 4px 4px #5eff5e; }
+    .frame-diamond .card-side { border-color: #55ffff; box-shadow: 0 0 15px rgba(85,255,255,0.4), inset -4px -4px #0f4f4f, inset 4px 4px #aaffff; }
+    .frame-amethyst .card-side { border-color: #c084fc; box-shadow: 0 0 18px rgba(192,132,252,0.5), inset -4px -4px #4c1d95, inset 4px 4px #e9d5ff; }
+    .frame-magma .card-side { border-color: #ff5500; box-shadow: 0 0 20px rgba(255,85,0,0.55), inset -4px -4px #7a1500, inset 4px 4px #ff9955; }
+    .frame-netherite .card-side { border-color: #6c4f70; box-shadow: 0 0 15px rgba(108,79,112,0.5), inset -4px -4px #261629, inset 4px 4px #a078a6; }
+
+    /* POPRAWIONY ZAKLĘTY BLASK: Mieni się TYLKO ramka i poświata, zdjęcie zachowuje 100% normalne kolory */
+    .frame-enchanted .card-side {
+      animation: enchantedBorderGlow 4s infinite linear;
+    }
+    @keyframes enchantedBorderGlow {
+      0% { border-color: #e879f9; box-shadow: 0 0 22px rgba(232,121,249,0.7), inset -4px -4px #701a75, inset 4px 4px #f5d0fe; }
+      25% { border-color: #a855f7; box-shadow: 0 0 22px rgba(168,85,247,0.7), inset -4px -4px #581c87, inset 4px 4px #d8b4fe; }
+      50% { border-color: #3b82f6; box-shadow: 0 0 22px rgba(59,130,246,0.7), inset -4px -4px #1e3a8a, inset 4px 4px #bfdbfe; }
+      75% { border-color: #06b6d4; box-shadow: 0 0 22px rgba(6,182,212,0.7), inset -4px -4px #164e63, inset 4px 4px #a5f3fc; }
+      100% { border-color: #e879f9; box-shadow: 0 0 22px rgba(232,121,249,0.7), inset -4px -4px #701a75, inset 4px 4px #f5d0fe; }
+    }
+
+    .card-wrap.fx-good .card-side { box-shadow: 0 0 28px #55ff55, inset -4px -4px #155414, inset 4px 4px #5eff5e; }
+    .card-wrap.fx-bad { animation: shakeCard 0.35s ease-in-out; }
+    .card-wrap.fx-bad .card-side { box-shadow: 0 0 28px #ff5555, inset -4px -4px #541414, inset 4px 4px #ff5e5e; }
+
+    @keyframes shakeCard {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-12px) rotate(-1deg); }
+      40% { transform: translateX(12px) rotate(1deg); }
+      60% { transform: translateX(-7px); }
+      80% { transform: translateX(7px); }
+    }
+
+    .floating-feedback {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.3rem;
+      font-weight: 800;
+      text-shadow: 3px 3px #000;
+      pointer-events: none;
+      z-index: 100;
+      animation: floatUp 0.7s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+      white-space: nowrap;
+    }
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+      30% { opacity: 1; transform: translate(-50%, -20px) scale(1.15); }
+      100% { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+    }
+
+    .card-title { font-size: 1.2rem; color: #aaaaaa; text-transform: uppercase; letter-spacing: 1px; }
+    .card-word {
+      font-size: 2.1rem;
+      color: #ffff55;
+      text-shadow: 2px 2px #000;
+      word-break: break-word;
+      margin: auto 0;
+      line-height: 1.2;
+    }
+    .card-streak {
+      background: #553300;
+      color: #ffaa00;
+      border: 2px solid #ffaa00;
+      padding: 2px 8px;
+      font-size: 1rem;
+      border-radius: 4px;
+    }
+
+    .card-img-frame {
+      width: 100%;
+      height: 200px;
+      background: #111;
+      border: 3px solid #000;
+      box-shadow: inset 0 0 10px #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 6px 0;
+      overflow: hidden;
+    }
+    .card-img-frame img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .action-row { display: flex; gap: 6px; width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .action-row.show { opacity: 1; pointer-events: auto; }
+    .btn-half { flex: 1; min-height: 56px; }
+    .btn-know { flex: 0 0 85px; min-height: 56px; }
+
+    .auth-form { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+    .auth-input {
+      background: #000;
+      border: 3px solid #555;
+      color: #55ff55;
+      font-size: 1.3rem;
+      padding: 8px 12px;
+      outline: none;
+    }
+    .auth-input:focus { border-color: #55ffff; }
+
+    /* Karty graczy w panelu admina */
+    .admin-user-card {
+      background: #1e1e1e;
+      border: 3px solid #000;
+      padding: 10px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .admin-user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #333;
+      padding-bottom: 5px;
+      margin-bottom: 6px;
+    }
+    .admin-stats-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 1rem;
+      margin: 6px 0;
+      background: #111;
+      padding: 6px;
+      border: 1px solid #333;
+    }
+    .admin-inventory-box {
+      font-size: 0.95rem;
+      color: #aaa;
+      background: #141414;
+      padding: 6px;
+      border: 1px dashed #444;
+      margin-top: 4px;
+    }
+
+    /* Modale */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 15px;
+    }
+    .modal-overlay.active { display: flex; }
+    .stat-row { display: flex; justify-content: space-between; border-bottom: 2px dashed #444; padding: 6px 0; font-size: 1.25rem; }
+
+    /* Sklep kafelki */
+    .shop-section-title { font-size: 1.3rem; color: #ffaa00; margin: 14px 0 6px 0; text-align: left; border-bottom: 2px solid #000; }
+    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
+    .shop-item {
+      background: #222;
+      border: 2px solid #000;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      text-align: center;
+    }
+    .shop-item-name { font-size: 1.1rem; color: #55ffff; }
+    .shop-item-cost { font-size: 1rem; color: #55ff55; margin: 4px 0; }
+
+    .volume-box {
+      background: #222;
+      border: 3px solid #000;
+      padding: 10px 14px;
+      position: absolute;
+      top: 48px;
+      right: 10px;
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      color: #fff;
+    }
+    .volume-box.active { display: flex; }
+
+    /* RESPONSIVE DESKTOP */
+    @media (min-width: 768px) {
+      .mc-box, .screen, header, .xp-section, .card-wrap, .action-row {
+        max-width: 740px;
+      }
+      .card-wrap { height: 460px; }
+      .card-img-frame { height: 250px; }
+      .card-word { font-size: 2.6rem; }
+      .mc-btn { font-size: 1.35rem; }
+      .shop-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 14px 0 5px 0;
+      display: flex;
+      gap: 15px;
+      font-size: 1rem;
+      color: #666;
+    }
+    footer a { color: #888; text-decoration: none; cursor: pointer; }
+    footer a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <canvas id="fxCanvas"></canvas>
+
+  <!-- PRZESUWANY ZWIERZAK NA EKRANIE -->
+  <div id="draggablePet" class="draggable-pet" title="Złap i przeciągnij mnie po ekranie!">🐺</div>
+
+  <!-- EKRAN LOGOWANIA -->
+  <div id="screenAuth" class="screen active">
+    <div class="mc-box" style="margin-top: 40px; text-align: center;">
+      <!-- 5x kliknięcie otwiera admina -->
+      <h2 style="font-size: 2.3rem; color: #000; margin-bottom: 4px; cursor: default;" onclick="handleSecretAdminClick()">MINECRAFT FISZKI</h2>
+      <p style="font-size: 1.2rem; color: #333;">Podaj nick i hasło aby wejść do gry:</p>
+      
+      <form class="auth-form" onsubmit="handleAuth(event)">
+        <input type="text" id="authLogin" class="auth-input" placeholder="TWÓJ NICK" required autocomplete="username">
+        <input type="password" id="authPass" class="auth-input" placeholder="HASŁO" required autocomplete="current-password">
+        <button type="submit" class="mc-btn mc-btn-green" style="font-size: 1.45rem;">GRAJ / WEJDŹ</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GŁÓWNY EKRAN NAUKI -->
+  <div id="screenApp" class="screen">
+    <header>
+      <div class="user-info">
+        <span class="user-tag" id="currentUsername">Steve</span>
+        <span class="user-rank" id="userRankTitle">🪵 Początkujący Drwal</span>
+      </div>
+
+      <div style="display:flex; gap:6px; align-items:center;">
+        <div class="emerald-badge" title="Twoje Emeraldy">
+          <span>🟢</span><b id="emeraldCount">0</b>
+        </div>
+        <button class="mc-btn mc-btn-gold" onclick="openShopModal()" style="padding: 2px 7px; font-size: 0.95rem;">🛒 Sklep</button>
+        <button class="mc-btn" onclick="toggleVolumeBox()" id="muteBtn" style="padding: 2px 7px; font-size: 0.95rem;">🔊</button>
+        <button class="mc-btn" onclick="openStatsModal()" style="padding: 2px 7px; font-size: 0.95rem; background:#388724;">📊</button>
+        <button class="mc-btn" onclick="logout()" style="padding: 2px 7px; font-size: 0.95rem;">🚪</button>
+      </div>
+
+      <!-- Popover regulacji głośności -->
+      <div class="volume-box" id="volumeBox">
+        <span style="font-size:1.1rem; color:#55ffff;">GŁOŚNOŚĆ: <span id="volValText">80%</span></span>
+        <input type="range" id="volRange" min="0" max="100" value="80" oninput="changeVolume(this.value)" style="cursor:pointer; width:130px;">
+      </div>
+    </header>
+
+    <!-- XP Bar i Ranga -->
+    <div class="xp-section">
+      <div class="xp-header-info">
+        <span class="xp-level-badge" id="xpLvlBadge">POZIOM XP: 0</span>
+        <span style="color:#ffff55;" id="nextLvlBadge">DO AWANSU: 0/10 (+5 🟢)</span>
+      </div>
+      <div class="xp-bar-container">
+        <div class="xp-part-done" id="barDone" style="width: 0%;"></div>
+        <div class="xp-part-one" id="barOne" style="width: 0%;"></div>
+        <div class="xp-part-new" id="barNew" style="width: 100%;"></div>
+      </div>
+      <div class="mc-stats-grid">
+        <div class="stat-pill" style="border-color:#555;">
+          <span style="color:#bbb;">NOWE</span>
+          <b id="stNew" style="color:#fff;">0</b>
+        </div>
+        <div class="stat-pill" style="border-color:#ca8a04;">
+          <span style="color:#ffaa00;">1X DOBRZE</span>
+          <b id="stOne" style="color:#ffaa00;">0</b>
+        </div>
+        <div class="stat-pill" style="border-color:#16a34a;">
+          <span style="color:#55ff55;">ODSTAWKA</span>
+          <b id="stDone" style="color:#55ff55;">0</b>
+        </div>
+        <div class="stat-pill" style="border-color:#0284c7;">
+          <span style="color:#55ffff;">TERAZ</span>
+          <b id="stDue" style="color:#55ffff;">0</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- FISZKA -->
+    <div class="card-wrap" id="cardWrap" onclick="flipCard()">
+      <div id="feedbackPopup"></div>
+      <div class="card-inner" id="cardElement">
+        <!-- PRZÓD -->
+        <div class="card-side card-front">
+          <div class="card-title">POLSKI</div>
+          <div id="frontStreakWrap"></div>
+          <div class="card-word" id="frontWord">...</div>
+          <div style="color: #888; font-size: 1.05rem;">[ Dotknij fiszki, aby obrócić ]</div>
+        </div>
+        <!-- TYŁ -->
+        <div class="card-side card-back">
+          <div class="card-title">ANGIELSKI</div>
+          <div class="card-word" id="backWord" style="font-size: 1.7rem; margin: 4px 0;">...</div>
+          <div class="card-img-frame">
+            <img id="backImg" src="" alt="ilustracja" onerror="this.src='https://placehold.co/400x200/222/white?text=Brak+obrazka'">
+          </div>
+          <div style="color: #aaa; font-size: 1rem;">Wybierz ocenę:</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRZYCISKI -->
+    <div class="action-row" id="actionRow">
+      <button class="mc-btn mc-btn-red btn-half" onclick="answerCard('1min')">
+        1 MINUTA
+        <span class="mc-btn-sub">reset (0/2)</span>
+      </button>
+      <button class="mc-btn mc-btn-green btn-half" onclick="answerCard('10min')">
+        10 MINUT
+        <span class="mc-btn-sub" id="sub10min">+1 dobrze (🟢 +1)</span>
+      </button>
+      <button class="mc-btn btn-know" onclick="answerCard('know')">
+        UMIEM
+        <span class="mc-btn-sub">2/2 (🟢 +2)</span>
+      </button>
+    </div>
+
+    <div id="waitBox" class="mc-box" style="display:none; text-align:center; margin-top:20px;">
+      <h3 style="font-size: 1.7rem; color:#000;">DOBRA ROBOTA! ⏰</h3>
+      <p style="color:#222; font-size: 1.15rem; margin: 6px 0;">Wszystko na tę chwilę powtórzone.</p>
+      <div id="waitTimer" style="font-size: 2.7rem; color: #a82b2b; font-weight: bold; margin: 8px 0;">00:00</div>
+      <button class="mc-btn" onclick="forceNextDue()" style="font-size: 1.15rem;">Powtórz teraz (bez czekania)</button>
+    </div>
+  </div>
+
+  <!-- MODAL STATYSTYK -->
+  <div class="modal-overlay" id="statsModal" onclick="closeStatsModal()">
+    <div class="mc-box" style="max-width: 480px;" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="font-size: 1.8rem; color:#000;">📊 STATYSTYKI GRACZA</h2>
+        <button class="mc-btn" onclick="closeStatsModal()" style="padding:2px 8px;">X</button>
+      </div>
+
+      <div style="background:#111; padding:12px; border:3px solid #000; color:#fff; margin-bottom:12px;">
+        <div class="stat-row">
+          <span>🏆 Ranga gracza:</span>
+          <b style="color:#ffaa00;" id="mRank">Drwal</b>
+        </div>
+        <div class="stat-row">
+          <span>⭐ Poziom XP:</span>
+          <b style="color:#80ff20;" id="mXpLvl">0</b>
+        </div>
+        <div class="stat-row">
+          <span>🎁 Następny poziom za:</span>
+          <b style="color:#ffff55;" id="mNextLvlWords">10 słówek (+5 🟢)</b>
+        </div>
+        <div class="stat-row">
+          <span>🟢 Emeraldy w sakiewce:</span>
+          <b style="color:#55ff55;" id="mEmeralds">0</b>
+        </div>
+        <div class="stat-row">
+          <span>📈 Postęp całości:</span>
+          <b style="color:#ffff55;" id="mPercent">0%</b>
+        </div>
+        <div class="stat-row">
+          <span>🟩 W odstawce (opanowane):</span>
+          <b style="color:#55ff55;" id="mDone">0 / 296</b>
+        </div>
+        <div class="stat-row">
+          <span>🟨 1x dobrze:</span>
+          <b style="color:#ffaa00;" id="mOne">0 / 296</b>
+        </div>
+        <div class="stat-row">
+          <span>⬜ Nieruszone:</span>
+          <b style="color:#bbb;" id="mNew">296</b>
+        </div>
+        <div class="stat-row">
+          <span>⏰ Do powtórki teraz:</span>
+          <b style="color:#55ffff;" id="mDue">0</b>
+        </div>
+        <div class="stat-row" style="border-bottom:none;">
+          <span>⚡ Powtórki w tej sesji:</span>
+          <b style="color:#ff55ff;" id="mSessionClicks">0</b>
+        </div>
+      </div>
+
+      <button class="mc-btn mc-btn-green" onclick="closeStatsModal()" style="width:100%;">ZAMKNIJ</button>
+    </div>
+  </div>
+
+  <!-- ROZBUDOWANY MODAL SKLEPU -->
+  <div class="modal-overlay" id="shopModal" onclick="closeShopModal()">
+    <div class="mc-box" style="max-width: 620px; max-height:88vh; overflow-y:auto;" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="font-size: 1.9rem; color:#000;">🛒 SKLEP MINECRAFT</h2>
+        <button class="mc-btn" onclick="closeShopModal()" style="padding:2px 8px;">X</button>
+      </div>
+
+      <div style="text-align:center; margin-bottom:10px; font-size:1.25rem; background:#111; color:#55ff55; padding:6px; border:2px solid #000;">
+        Twoje saldo: <b>🟢 <span id="shopUserEmeralds">0</span> Emeraldów</b>
+      </div>
+
+      <!-- Kategoria: Biomy (Tła) -->
+      <div class="shop-section-title">🏞️ BIOMY (TŁA GRY)</div>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-item-name">Jaskinia</div>
+          <div class="shop-item-cost">Darmowe</div>
+          <button class="mc-btn" id="btn_bg_default" onclick="equipItem('bg', 'default')">Załóż</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">Brzozowy Gaj</div>
+          <div class="shop-item-cost">🟢 15</div>
+          <button class="mc-btn" id="btn_bg_birch" onclick="buyOrEquip('bg', 'birch', 15)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌸 Kwitnąca Wiśnia</div>
+          <div class="shop-item-cost">🟢 25</div>
+          <button class="mc-btn" id="btn_bg_cherry" onclick="buyOrEquip('bg', 'cherry', 25)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🏜️ Pustynna Wioska</div>
+          <div class="shop-item-cost">🟢 25</div>
+          <button class="mc-btn" id="btn_bg_desert" onclick="buyOrEquip('bg', 'desert', 25)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌋 Karmazynowy Nether</div>
+          <div class="shop-item-cost">🟢 30</div>
+          <button class="mc-btn" id="btn_bg_nether" onclick="buyOrEquip('bg', 'nether', 30)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌌 Mroczne Głębiny</div>
+          <div class="shop-item-cost">🟢 40</div>
+          <button class="mc-btn" id="btn_bg_deepdark" onclick="buyOrEquip('bg', 'deepdark', 40)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">❄️ Śnieżna Tundra</div>
+          <div class="shop-item-cost">🟢 40</div>
+          <button class="mc-btn" id="btn_bg_snow" onclick="buyOrEquip('bg', 'snow', 40)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌊 Podwodny Ocean</div>
+          <div class="shop-item-cost">🟢 45</div>
+          <button class="mc-btn" id="btn_bg_ocean" onclick="buyOrEquip('bg', 'ocean', 45)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🔮 Wymiar Endu</div>
+          <div class="shop-item-cost">🟢 50</div>
+          <button class="mc-btn" id="btn_bg_end" onclick="buyOrEquip('bg', 'end', 50)">Kup</button>
+        </div>
+      </div>
+
+      <!-- Kategoria: Pety (Emotki) -->
+      <div class="shop-section-title">🐾 PLUSZAKI / PETY (DO PRZECIĄGANIA)</div>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-item-name">🐺 Wilczek</div>
+          <div class="shop-item-cost">🟢 20</div>
+          <button class="mc-btn" id="btn_pet_wolf" onclick="buyOrEquip('pet', 'wolf', 20)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🐱 Kotek</div>
+          <div class="shop-item-cost">🟢 25</div>
+          <button class="mc-btn" id="btn_pet_cat" onclick="buyOrEquip('pet', 'cat', 25)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🦊 Lisek</div>
+          <div class="shop-item-cost">🟢 30</div>
+          <button class="mc-btn" id="btn_pet_fox" onclick="buyOrEquip('pet', 'fox', 30)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🐸 Żabka</div>
+          <div class="shop-item-cost">🟢 30</div>
+          <button class="mc-btn" id="btn_pet_frog" onclick="buyOrEquip('pet', 'frog', 30)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🦎 Aksolotl</div>
+          <div class="shop-item-cost">🟢 35</div>
+          <button class="mc-btn" id="btn_pet_axolotl" onclick="buyOrEquip('pet', 'axolotl', 35)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🐝 Pszczółka</div>
+          <div class="shop-item-cost">🟢 35</div>
+          <button class="mc-btn" id="btn_pet_bee" onclick="buyOrEquip('pet', 'bee', 35)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🐼 Panda</div>
+          <div class="shop-item-cost">🟢 40</div>
+          <button class="mc-btn" id="btn_pet_panda" onclick="buyOrEquip('pet', 'panda', 40)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🧚 Duszek Allay</div>
+          <div class="shop-item-cost">🟢 45</div>
+          <button class="mc-btn" id="btn_pet_allay" onclick="buyOrEquip('pet', 'allay', 45)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">👑🐷 Świnka</div>
+          <div class="shop-item-cost">🟢 45</div>
+          <button class="mc-btn" id="btn_pet_pig" onclick="buyOrEquip('pet', 'pig', 45)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">💣 Creeper</div>
+          <div class="shop-item-cost">🟢 50</div>
+          <button class="mc-btn" id="btn_pet_creeper" onclick="buyOrEquip('pet', 'creeper', 50)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🦾 Golem</div>
+          <div class="shop-item-cost">🟢 55</div>
+          <button class="mc-btn" id="btn_pet_golem" onclick="buyOrEquip('pet', 'golem', 55)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🐉 Smok Endu</div>
+          <div class="shop-item-cost">🟢 60</div>
+          <button class="mc-btn" id="btn_pet_dragon" onclick="buyOrEquip('pet', 'dragon', 60)">Kup</button>
+        </div>
+        <div class="shop-item" style="grid-column: span 2;">
+          <div class="shop-item-name">Schowaj zwierzaka</div>
+          <button class="mc-btn" onclick="equipItem('pet', null)">Zdejmij zwierzaka</button>
+        </div>
+      </div>
+
+      <!-- Kategoria: Ramki -->
+      <div class="shop-section-title">🖼️ RAMKI FISZKI</div>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-item-name">Kamienna (Zwykła)</div>
+          <div class="shop-item-cost">Darmowa</div>
+          <button class="mc-btn" id="btn_frame_default" onclick="equipItem('frame', 'default')">Załóż</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🥇 Złota Ramka</div>
+          <div class="shop-item-cost">🟢 20</div>
+          <button class="mc-btn" id="btn_frame_gold" onclick="buyOrEquip('frame', 'gold', 20)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌸 Wiśniowa</div>
+          <div class="shop-item-cost">🟢 30</div>
+          <button class="mc-btn" id="btn_frame_cherry" onclick="buyOrEquip('frame', 'cherry', 30)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🟢 Szmaragdowa</div>
+          <div class="shop-item-cost">🟢 35</div>
+          <button class="mc-btn" id="btn_frame_emerald" onclick="buyOrEquip('frame', 'emerald', 35)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">💎 Diamentowa</div>
+          <div class="shop-item-cost">🟢 40</div>
+          <button class="mc-btn" id="btn_frame_diamond" onclick="buyOrEquip('frame', 'diamond', 40)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🔮 Ametystowa</div>
+          <div class="shop-item-cost">🟢 50</div>
+          <button class="mc-btn" id="btn_frame_amethyst" onclick="buyOrEquip('frame', 'amethyst', 50)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🔥 Płonąca Magma</div>
+          <div class="shop-item-cost">🟢 55</div>
+          <button class="mc-btn" id="btn_frame_magma" onclick="buyOrEquip('frame', 'magma', 55)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌌 Netheritowa</div>
+          <div class="shop-item-cost">🟢 60</div>
+          <button class="mc-btn" id="btn_frame_netherite" onclick="buyOrEquip('frame', 'netherite', 60)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">✨ Zaklęty Blask</div>
+          <div class="shop-item-cost">🟢 75</div>
+          <button class="mc-btn" id="btn_frame_enchanted" onclick="buyOrEquip('frame', 'enchanted', 75)">Kup</button>
+        </div>
+      </div>
+
+      <!-- Kategoria: Aury i Efekty -->
+      <div class="shop-section-title">✨ AURY I EFEKTY MAGICZNE</div>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-item-name">Brak aury</div>
+          <div class="shop-item-cost">Darmowa</div>
+          <button class="mc-btn" id="btn_aura_none" onclick="equipItem('aura', 'none')">Załóż</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">❤️ Serca Miłości</div>
+          <div class="shop-item-cost">🟢 25</div>
+          <button class="mc-btn" id="btn_aura_hearts" onclick="buyOrEquip('aura', 'hearts', 25)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🌸 Płatki Wiśni</div>
+          <div class="shop-item-cost">🟢 35</div>
+          <button class="mc-btn" id="btn_aura_cherry" onclick="buyOrEquip('aura', 'cherry', 35)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🔮 Runy Stołu Zaklęć</div>
+          <div class="shop-item-cost">🟢 40</div>
+          <button class="mc-btn" id="btn_aura_runes" onclick="buyOrEquip('aura', 'runes', 40)">Kup</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-name">🔥 Płomienie Blaza</div>
+          <div class="shop-item-cost">🟢 50</div>
+          <button class="mc-btn" id="btn_aura_flames" onclick="buyOrEquip('aura', 'flames', 50)">Kup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UKRYTY PANEL ADMINA (HASŁO: dupa123) -->
+  <div id="screenAdmin" class="screen">
+    <div class="mc-box" style="max-width: 740px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+        <h2 style="font-size: 1.8rem; color:#000;">PANEL ADMINA ⚙️</h2>
+        <button class="mc-btn" onclick="closeAdminScreen()">Wróć do gry</button>
+      </div>
+
+      <div id="adminAuthBox">
+        <p style="color:#000; margin-bottom: 6px; font-size:1.15rem;">Podaj hasło admina:</p>
+        <input type="password" id="adminPassInput" class="auth-input" style="width:100%; margin-bottom: 8px;">
+        <button class="mc-btn mc-btn-green" onclick="unlockAdmin()" style="width:100%;">ZALOGUJ DO ADMINA</button>
+      </div>
+
+      <div id="adminContent" style="display:none;">
+        
+        <div style="background:#222; border:2px solid #000; padding:10px; color:#fff; margin-bottom:12px;">
+          <h3 style="font-size:1.2rem; color:#55ffff; margin-bottom:6px;">USTAWIENIA REJESTRACJI</h3>
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:1.15rem;">
+            <input type="checkbox" id="regToggle" onchange="toggleRegistration(this.checked)" style="transform:scale(1.4);">
+            <span>Zezwalaj na samodzielną rejestrację</span>
+          </label>
+        </div>
+
+        <div style="background:#222; border:2px solid #000; padding:10px; color:#fff; margin-bottom:12px;">
+          <h3 style="font-size:1.2rem; color:#55ff55; margin-bottom:6px;">STWÓRZ NOWE KONTO</h3>
+          <form onsubmit="adminCreateUser(event)" style="display:flex; flex-direction:column; gap:6px;">
+            <input type="text" id="newAdminUser" class="auth-input" placeholder="NICK" required style="font-size:1rem; padding:4px 8px;">
+            <input type="password" id="newAdminPass" class="auth-input" placeholder="HASŁO" required style="font-size:1rem; padding:4px 8px;">
+            <button type="submit" class="mc-btn mc-btn-green" style="font-size:1.1rem; padding:4px;">DODAJ UŻYTKOWNIKA</button>
+          </form>
+        </div>
+
+        <p style="color:#000; margin-bottom: 6px; font-weight:bold; font-size:1.2rem;">Zarejestrowani gracze (postępy, hasła i ekwipunek):</p>
+        <div id="adminUserList" style="max-height:420px; overflow-y:auto;"></div>
+
+        <button class="mc-btn mc-btn-red" onclick="adminResetAll()" style="width:100%; margin-top: 15px; font-size: 1rem;">
+          WYCZYŚĆ CAŁĄ BAZĘ DANYCH
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <a onclick="resetMyProgress()">Resetuj mój postęp</a>
+  </footer>
+
+  <script>
+    const rawData = [
+      ["address", "adres", "postal+address+envelope"],
+      ["age", "wiek", "age+birthday+cake+candles"],
+      ["date of birth", "data urodzenia", "date+of+birth+passport+id"],
+      ["divorced", "rozwiedziony", "divorced+couple+broken+ring"],
+      ["female", "kobieta", "female+woman+portrait"],
+      ["first name", "imię", "first+name+hello+badge+nametag"],
+      ["gender", "płeć", "gender+symbols+male+female"],
+      ["male", "mężczyzna", "male+man+portrait+face"],
+      ["marital status", "stan cywilny", "marital+status+form+checkbox"],
+      ["married", "żonaty, zamężna", "married+couple+wedding+rings"],
+      ["nationality", "narodowość", "world+passports+nationalities+flags"],
+      ["occupation", "zawód", "different+occupations+professions+jobs"],
+      ["single", "stanu wolnego", "single+person+walking+alone"],
+      ["surname", "nazwisko", "signature+last+name+surname"],
+      ["widowed", "owdowiały", "widow+mourning+loss+memory"],
+      ["country of residence", "kraj zamieszkania", "world+map+globe+country+residence"],
+      ["distinguishing features", "znaki szczególne", "distinguishing+features+face+scar+mole"],
+      ["ethnic origin", "pochodzenie etniczne", "diverse+ethnic+faces+cultures"],
+      ["next of kin", "najbliższy krewny", "family+emergency+contact+support"],
+      ["attractive", "atrakcyjny", "attractive+beautiful+person+smile"],
+      ["beautiful", "piękny", "beautiful+woman+face+portrait"],
+      ["fit", "sprawny, w dobrej formie", "fit+athletic+person+jogging"],
+      ["good-looking", "przystojny, ładny", "good+looking+person+smile"],
+      ["handsome", "przystojny", "handsome+man+smiling+face"],
+      ["plain (wygląd)", "pospolity, nieatrakcyjny", "plain+simple+ordinary+person+face"],
+      ["pretty", "ładny", "pretty+cute+girl+smiling"],
+      ["ugly", "brzydki", "ugly+funny+creature+face"],
+      ["cut down on sth", "ograniczać (ilość czegoś)", "cutting+down+sugar+diet+stop"],
+      ["go for (darker colours)", "wybierać, sięgać po (ciemniejsze kolory)", "dark+colored+clothes+wardrobe+black"],
+      ["paint your nails", "malować paznokcie", "painting+nails+red+manicure"],
+      ["put on / lose weight", "przybierać / tracić na wadze", "weight+loss+gain+scale+tape+measure"],
+      ["straighten", "prostować (włosy)", "straightening+hair+flat+iron"],
+      ["take up (a hobby/a sport)", "zacząć (hobby/uprawiać sport)", "starting+new+hobby+tennis+painting"],
+      ["fat", "gruby", "fat+big+belly+man"],
+      ["muscular", "muskularny", "muscular+bodybuilder+biceps"],
+      ["obese", "otyły", "obese+weight+scale+measure"],
+      ["overweight/underweight", "z nadwagą/niedowagą", "overweight+and+underweight+comparison"],
+      ["plump", "pulchny, puszysty", "plump+chubby+cheeks+face"],
+      ["skinny", "chudy", "skinny+thin+arms+ribs"],
+      ["slim", "szczupły", "slim+slender+waist+fit"],
+      ["well-built", "dobrze zbudowany", "well+built+athletic+male+physique"],
+      ["lanky", "tyczkowaty", "lanky+tall+thin+man+legs"],
+      ["stocky", "krępy", "stocky+short+broad+shoulders+man"],
+      ["bald", "łysy", "bald+man+head+shaved"],
+      ["blond", "blond", "blonde+hair+woman+portrait"],
+      ["curly", "kręcone", "curly+hair+curls+hairstyle"],
+      ["dark", "ciemny", "dark+black+hair+portrait"],
+      ["dyed", "farbowane", "dyed+colorful+hair+pink+blue"],
+      ["red", "rude", "redhead+red+hair+freckles"],
+      ["shoulder-length", "do ramion", "shoulder+length+bob+hairstyle"],
+      ["straight", "proste", "straight+long+smooth+hair"],
+      ["wavy", "falujące", "wavy+beach+waves+hair"],
+      ["auburn", "kasztanowe", "auburn+hair+color+chestnut"],
+      ["fine/thick", "cienkie, rzadkie/gęste", "fine+hair+vs+thick+hair+density"],
+      ["fringe", "grzywka", "hair+bangs+fringe+forehead"],
+      ["have a centre/side parting", "mieć przedziałek na środku/z boku", "hair+middle+parting+side+parting"],
+      ["braid", "warkocz", "braided+hair+french+braid"],
+      ["ponytail", "kucyk", "high+ponytail+hairstyle"],
+      ["receding hairline", "włosy rzednące na skroniach", "receding+hairline+temples+male"],
+      ["wear your hair loose/up", "nosić włosy rozpuszczone/spięte", "hair+loose+vs+hair+updo+bun"],
+      ["beard", "broda", "men+full+beard+barber"],
+      ["freckles", "piegi", "freckles+cheeks+nose+face"],
+      ["moustache", "wąsy", "men+mustache+moustache+lip"],
+      ["pale/tanned/dark complexion", "blada/opalona/ciemna cera", "pale+skin+vs+tanned+skin+complexion"],
+      ["pierced ears", "przekłute uszy", "pierced+ears+earrings+earlobe"],
+      ["scar", "blizna", "skin+scar+wound+healing"],
+      ["spotty", "pryszczaty", "acne+spots+face+pimples"],
+      ["tattoo", "tatuaż", "arm+tattoo+ink+art"],
+      ["wrinkles", "zmarszczki", "face+wrinkles+aging+eyes"],
+      ["birthmark", "znamię", "birthmark+skin+pigmentation"],
+      ["clean-shaven", "gładko ogolony", "clean+shaven+man+smooth+chin"],
+      ["clear skin", "gładka skóra", "clear+healthy+glowing+skin+face"],
+      ["double chin", "podwójny podbródek", "double+chin+neck+face"],
+      ["high cheekbones", "wystające kości policzkowe", "high+cheekbones+female+model+contour"],
+      ["high forehead", "wysokie czoło", "high+forehead+face+profile"],
+      ["piercing blue eyes", "przenikliwe niebieskie oczy", "piercing+vibrant+blue+eyes+close+up"],
+      ["blouse", "bluzka", "women+elegant+silk+blouse"],
+      ["boots", "buty", "leather+winter+boots+shoes"],
+      ["bra", "biustonosz", "women+brassiere+bra+lingerie"],
+      ["casual", "codzienny, swobodny", "casual+outfit+jeans+tshirt"],
+      ["coat", "płaszcz", "classic+winter+trench+coat"],
+      ["dress", "sukienka", "women+elegant+dress+fashion"],
+      ["fashionable/trendy", "modny", "fashionable+trendy+streetwear+style"],
+      ["fleece", "bluza polarowa", "warm+fleece+jacket+outdoor"],
+      ["gloves", "rękawiczki", "winter+wool+gloves+hands"],
+      ["hat", "kapelusz", "classic+fedora+sun+hat"],
+      ["jacket", "kurtka", "leather+jacket+stylish+zipper"],
+      ["jeans", "dżinsy", "classic+blue+denim+jeans"],
+      ["jumper", "sweter", "knitted+cozy+wool+sweater+jumper"],
+      ["old-fashioned", "staromodny, staroświecki", "old+fashioned+vintage+retro+clothing"],
+      ["pyjamas", "piżama", "sleepwear+cozy+pajamas+pyjamas"],
+      ["sandals", "sandały", "summer+leather+sandals+shoes"],
+      ["shirt", "koszula", "formal+white+dress+shirt+collar"],
+      ["shoes", "buty", "classic+leather+dress+shoes"],
+      ["shorts", "szorty", "casual+summer+shorts+denim"],
+      ["skirt", "spódnica", "women+pleated+fashion+skirt"],
+      ["smart", "elegancki", "smart+casual+elegant+business+man"],
+      ["socks", "skarpety", "cotton+socks+colored+feet"],
+      ["suit", "garnitur", "men+tailored+business+suit+tie"],
+      ["sweatshirt", "bluza sportowa", "cotton+crewneck+sweatshirt"],
+      ["tie", "krawat", "silk+necktie+suit+knot"],
+      ["tracksuit", "dres", "sport+tracksuit+jacket+sweatpants"],
+      ["trainers", "obuwie sportowe", "running+sneakers+trainers+shoes"],
+      ["trousers", "spodnie", "formal+tailored+dress+trousers+pants"],
+      ["underwear", "bielizna", "cotton+boxer+briefs+underwear"],
+      ["waistcoat", "kamizelka", "formal+suit+waistcoat+vest"],
+      ["wear", "nosić, mieć na sobie", "person+wearing+stylish+clothes"],
+      ["ballgown", "suknia balowa", "magnificent+evening+ballgown+dress"],
+      ["boat-necked", "z szerokim dekoltem", "boat+neckline+dress+top"],
+      ["cardigan", "rozpinany sweter", "knitted+button+cardigan+sweater"],
+      ["collar", "kołnierzyk", "shirt+collar+necktie+formal"],
+      ["cuffs", "mankiety", "shirt+sleeve+cuffs+cufflinks"],
+      ["dressing gown", "szlafrok", "plush+bathrobe+dressing+gown"],
+      ["high heels", "buty na wysokim obcasie", "high+heels+stiletto+pumps"],
+      ["hoodie", "bluza z kapturem", "hooded+sweatshirt+hoodie+pocket"],
+      ["long-sleeved/short-sleeved", "z krótkim/długim rękawem (koszula)", "long+sleeved+shirt+vs+short+sleeved"],
+      ["strapless top", "bluzka bez ramiączek", "strapless+tube+top+women"],
+      ["V-neck", "dekolt w szpic", "v+neck+sweater+collar"],
+      ["belt", "pasek", "leather+waist+belt+buckle"],
+      ["button", "guzik", "sewing+round+clothes+button"],
+      ["cap", "czapka z daszkiem", "baseball+cap+visor+hat"],
+      ["earrings", "kolczyki", "gold+diamond+earrings+jewelry"],
+      ["glasses", "okulary", "spectacles+reading+eyeglasses+frames"],
+      ["handbag/bag", "torebka", "leather+designer+handbag+purse"],
+      ["jewellery", "biżuteria", "gold+gemstone+jewelry+collection"],
+      ["necklace", "naszyjnik", "gold+chain+necklace+pendant"],
+      ["ring", "pierścionek", "diamond+gold+engagement+ring"],
+      ["scarf", "szalik", "knitted+winter+warm+scarf+neck"],
+      ["tie (dodatki)", "krawat", "patterned+silk+necktie"],
+      ["bracelet", "bransoletka", "silver+gold+wrist+bracelet"],
+      ["brooch", "broszka", "vintage+gemstone+jewelry+brooch+pin"],
+      ["shoe laces", "sznurówki", "sneakers+tied+shoelaces"],
+      ["slippers", "kapcie", "cozy+indoor+home+slippers"],
+      ["zip-up", "na zamek", "metal+zipper+zip+jacket"],
+      ["checked", "w kratkę", "checked+plaid+gingham+fabric+pattern"],
+      ["cotton", "bawełna", "natural+raw+cotton+plant+boll"],
+      ["gold", "złoto", "pure+gold+ingots+bars+shiny"],
+      ["leather", "skóra, skórzany", "brown+natural+leather+texture"],
+      ["plain (wzór)", "gładki", "plain+monochrome+fabric+texture"],
+      ["silk", "jedwab", "smooth+luxurious+silk+satin+fabric"],
+      ["silver", "srebrny", "shiny+silver+metal+bars"],
+      ["spotted", "w kropki", "polka+dots+spotted+pattern+fabric"],
+      ["striped", "w paski", "black+and+white+striped+pattern+lines"],
+      ["tartan", "w szkocką kratę", "scottish+tartan+kilt+pattern"],
+      ["wool", "wełna", "natural+sheep+wool+knitting+yarn"],
+      ["elastic", "elastyczny", "elastic+band+stretch+fabric"],
+      ["fur", "futro", "fluffy+soft+animal+fur+coat"],
+      ["lacy", "koronkowy", "white+lace+lacy+fabric+pattern"],
+      ["lined", "na podszewce, ocieplany", "fleece+lined+jacket+inside+warm"],
+      ["aggressive", "agresywny", "aggressive+angry+person+shouting"],
+      ["ambitious", "ambitny", "ambitious+goal+climbing+success"],
+      ["bad-tempered", "wybuchowy", "bad+tempered+grumpy+frowning+man"],
+      ["big-headed", "zarozumiały", "arrogant+proud+snob+person"],
+      ["brave", "odważny", "brave+firefighter+saving+courage"],
+      ["careful/careless", "ostrożny/nieostrożny", "careful+walking+balance+caution"],
+      ["caring", "troskliwy", "caring+nurse+comforting+patient"],
+      ["cheerful", "radosny, pogodny", "cheerful+happy+smiling+joyful+face"],
+      ["clever", "mądry", "clever+smart+idea+lightbulb+brain"],
+      ["confident/overconfident", "pewny siebie/zbyt pewny siebie", "confident+business+person+pose"],
+      ["drama queen", "panikarz, osoba nadmiernie dramatyzująca", "drama+queen+hysterical+overreacting"],
+      ["easygoing", "wyluzowany", "easygoing+relaxed+chilling+hammock"],
+      ["energetic", "energiczny", "energetic+jumping+enthusiastic+person"],
+      ["extrovert", "ekstrawertyk", "extrovert+talking+smiling+crowd+party"],
+      ["friendly", "przyjazny", "friendly+smile+warm+greeting"],
+      ["fun-loving", "lubiący dobrą zabawę", "fun+loving+friends+laughing+party"],
+      ["generous", "hojny", "generous+donation+giving+hands"],
+      ["gentle", "łagodny, delikatny", "gentle+hand+holding+butterfly"],
+      ["hard-working", "pracowity", "hard+working+studying+desk+late"],
+      ["helpful/unhelpful", "uczynny/nieskory do pomocy", "helpful+volunteer+helping+elderly"],
+      ["honest/dishonest", "uczciwy/nieuczciwy", "honest+hand+on+heart+promise"],
+      ["imaginative/unimaginative", "pomysłowy, kreatywny/bez wyobraźni", "creative+imagination+artistic+ideas"],
+      ["independent", "niezależny", "independent+person+mountaintop+freedom"],
+      ["intelligent", "inteligentny", "intelligent+mind+chess+brain"],
+      ["introvert", "introwertyk", "introvert+cozy+reading+alone+quiet"],
+      ["lazy", "leniwy", "lazy+couch+potato+sleeping+sofa"],
+      ["mean", "skąpy, złośliwy", "mean+evil+laugh+grumpy"],
+      ["messy", "nieporządny, bałaganiarski", "messy+cluttered+untidy+room"],
+      ["nasty", "wstrętny, paskudny, zły, złośliwy", "nasty+mean+bully+face"],
+      ["nice", "miły", "nice+kind+friendly+smile"],
+      ["open", "otwarty", "open+arms+welcoming+friendly"],
+      ["optimistic/pessimistic", "optymistyczny/pesymistyczny", "glass+half+full+optimistic"],
+      ["outgoing", "towarzyski", "outgoing+social+friends+chatting"],
+      ["patient/impatient", "cierpliwy/niecierpliwy", "patient+waiting+calmly+clock"],
+      ["polite", "uprzejmy", "polite+gentleman+holding+door+bow"],
+      ["quiet", "cichy", "quiet+finger+on+lips+silence"],
+      ["helpless", "bezradny", "helpless+shrugging+confused+person"],
+      ["reliable/unreliable", "solidny, niezawodny/niesolidny, zawodny", "reliable+trustworthy+handshake+deal"],
+      ["responsible", "odpowiedzialny", "responsible+checklist+safety+duty"],
+      ["rude", "niegrzeczny", "rude+impolite+sticking+tongue+out"],
+      ["selfish/unselfish, selfless", "samolubny/bezinteresowny", "selfish+greedy+taking+all+money"],
+      ["serious", "poważny", "serious+focused+stern+face"],
+      ["shy", "nieśmiały", "shy+blushing+girl+timid"],
+      ["silly", "głupi", "silly+funny+goofy+face"],
+      ["sociable/unsociable", "towarzyski/nietowarzyski", "sociable+friends+gathering+talking"],
+      ["talkative", "gadatliwy", "talkative+person+chattering+mouth"],
+      ["tidy/untidy", "schludny, porządny/niechlujny", "clean+tidy+organized+bedroom"],
+      ["bossy", "apodyktyczny", "bossy+pointing+finger+demanding+boss"],
+      ["cowardly", "tchórzliwy", "cowardly+scared+hiding+afraid"],
+      ["eccentric", "ekscentryczny", "eccentric+quirky+colorful+outfit"],
+      ["materialistic", "materialistyczny", "materialistic+luxury+money+shopping+bags"],
+      ["modest", "skromny", "modest+humble+polite+person"],
+      ["moody", "humorzasty", "moody+mood+swings+frown"],
+      ["odd", "dziwny", "odd+unusual+strange+object"],
+      ["oddball", "dziwak", "oddball+weird+quirky+character"],
+      ["sensitive", "wrażliwy", "sensitive+emotional+crying+tear"],
+      ["sincere", "szczery", "sincere+warm+genuine+smile"],
+      ["sympathetic", "współczujący", "sympathetic+comforting+hand+shoulder+empathy"],
+      ["weird", "dziwny", "weird+bizarre+strange+surreal"],
+      ["weirdo", "dziwak", "funny+weirdo+bizarre+face"],
+      ["whizzkid", "cudowne dziecko", "child+prodigy+genius+whizzkid+math"],
+      ["withdrawn", "zamknięty w sobie", "withdrawn+lonely+person+corner+hoodie"],
+      ["angry, cross", "zły, rozgniewany", "furious+angry+red+face+screaming"],
+      ["annoyed", "zirytowany, rozdrażniony", "annoyed+frustrated+rolling+eyes"],
+      ["be in a good mood/bad mood", "być w dobrym/złym humorze", "happy+smile+vs+angry+mood+face"],
+      ["bored", "znudzony", "bored+yawning+student+chin+hand"],
+      ["disappointed", "rozczarowany", "disappointed+sad+person+facepalm"],
+      ["depressed", "załamany", "depressed+sad+person+darkness"],
+      ["embarrassed", "zawstydzony", "embarrassed+blushing+awkward+face"],
+      ["excited", "podekscytowany", "excited+happy+person+cheering"],
+      ["exhausted", "wyczerpany", "exhausted+tired+worker+sleeping+desk"],
+      ["frightened", "przerażony", "frightened+scared+wide+eyes+fear"],
+      ["nervous", "zdenerwowany", "nervous+biting+nails+sweating"],
+      ["pleased", "zadowolony", "pleased+satisfied+smile+thumbs+up"],
+      ["relaxed", "zrelaksowany", "relaxed+lounging+spa+resort"],
+      ["scared", "przestraszony", "scared+hiding+under+blanket"],
+      ["shocked", "zszokowany", "shocked+jaw+drop+open+mouth"],
+      ["stressed", "zestresowany", "stressed+headache+hands+on+head"],
+      ["surprised", "zaskoczony", "surprised+party+gift+happy+face"],
+      ["tired", "zmęczony", "tired+sleepy+eyes+yawning"],
+      ["upset", "przygnębiony, zaniepokojony", "upset+crying+troubled+face"],
+      ["worried", "zmartwiony", "worried+anxious+face+furrowed+brow"],
+      ["amazed", "zdumiony, zdziwiony", "amazed+astonished+wonder+eyes"],
+      ["delighted", "zachwycony", "delighted+laughing+pure+joy+smile"],
+      ["nagging feeling", "dręczące uczucie", "nagging+worry+anxiety+thinking"],
+      ["petrified", "przerażony", "petrified+frozen+fear+eyes"],
+      ["shattered", "zdruzgotany, wykończony", "utterly+exhausted+shattered+tired"],
+      ["stunned", "oniemiały, osłupiały", "stunned+speechless+disbelief+face"],
+      ["worn out", "wycieńczony, wyczerpany", "worn+out+tired+runner+slumped"],
+      ["adore", "uwielbiać", "adoring+cute+puppy+love"],
+      ["be a fan of sb/sth", "być fanem kogoś/czegoś", "stadium+sports+fan+cheering+scarf"],
+      ["be hopeless at", "być beznadziejnym w", "hopeless+fail+mistake+math"],
+      ["be interested in sth", "interesować się czymś", "curious+reading+magnifying+glass"],
+      ["be into sth", "zajmować się czymś, interesować", "passionate+hobby+painting+music"],
+      ["be keen on sth", "interesować się, lubić coś robić", "eager+enthusiastic+raising+hand"],
+      ["be mad about sb/sth", "szaleć za kimś/czymś", "crazy+in+love+hearts+eyes"],
+      ["can't stand", "nie znosić", "disgusted+plugging+nose+dislike"],
+      ["play games/board games", "grać w gry/gry planszowe", "board+game+dice+pawns+family"],
+      ["work out", "trenować, ćwiczyć", "gym+workout+lifting+dumbbells"],
+      ["abortion", "aborcja", "abortion+debate+protest+symbol"],
+      ["charity", "dobroczynność, organizacja charytatywna", "charity+donation+box+volunteers"],
+      ["drug abuse", "zażywanie narkotyków", "drug+abuse+pills+addiction+danger"],
+      ["fair trade", "sprawiedliwy handel", "fair+trade+certified+logo+coffee"],
+      ["homelessness", "bezdomność", "homeless+person+street+cardboard"],
+      ["unemployment", "bezrobocie", "unemployed+looking+for+job+sign"],
+      ["corruption", "korupcja", "political+corruption+bribe+money+handshake"],
+      ["racism", "rasizm", "stop+racism+equality+diversity+hands"],
+      ["death penalty", "kara śmierci", "death+penalty+gavel+courtroom+justice"],
+      ["euthanasia", "eutanazja", "euthanasia+hospital+holding+hand+peace"],
+      ["freedom of speech", "wolność słowa", "freedom+of+speech+megaphone+protest"],
+      ["gambling", "hazard", "casino+gambling+roulette+cards+chips"],
+      ["genetic engineering", "inżynieria genetyczna", "dna+genetic+engineering+crispr"],
+      ["privacy", "prywatność", "cybersecurity+privacy+lock+padlock"],
+      ["brief", "krótki, krótkotrwały", "brief+hourglass+sand+running+time"],
+      ["come across", "natknąć się na", "discovery+finding+treasure+map"],
+      ["complete", "całkowity, kompletny", "puzzle+complete+final+piece"],
+      ["develop into", "rozwinąć się w, stawać się (kimś)", "plant+growing+stages+seedling+flower"],
+      ["eco-freak", "fanatyk ekologii", "eco+activist+recycling+plant+green"],
+      ["fitness maniac", "fanatyk ćwiczeń fizycznych", "intense+fitness+gym+exercise+body"],
+      ["focus on", "skupić się na", "target+bullseye+focus+sharp"],
+      ["grow up", "dorastać", "growing+up+timeline+child+to+adult"],
+      ["have a lot/little in common", "mieć dużo/niewiele wspólnego", "venn+diagram+shared+common+interests"],
+      ["health nut", "osoba mająca obsesję na punkcie zdrowia", "healthy+organic+green+smoothie+diet"],
+      ["huge", "ogromny", "huge+giant+elephant+tiny+mouse"],
+      ["identify", "zidentyfikować", "fingerprint+biometric+identification+scanner"],
+      ["look up to", "podziwiać", "child+admiring+looking+up+to+older+brother"],
+      ["realise", "zdać sobie sprawę", "eureka+lightbulb+moment+realization"],
+      ["recognise", "rozpoznać", "recognizing+friend+waving+hello"],
+      ["remember", "pamiętać", "remembering+photo+album+nostalgia"],
+      ["remind someone to do something", "przypomnieć komuś, by coś zrobił", "sticky+note+reminder+alarm"],
+      ["spend money on", "wydawać pieniądze na", "spending+money+shopping+bags+cash"],
+      ["spot", "dostrzec", "spotting+bird+watching+binoculars"],
+      ["the complete opposite", "całkowite przeciwieństwo", "sun+and+moon+opposites+yin+yang"],
+      ["typical of", "typowy dla", "typical+traditional+british+tea+cup"],
+      ["be part of someone's nature", "leżeć w czyjejś naturze", "human+nature+instinct+dna+empathy"],
+      ["befriend", "zaprzyjaźnić się z", "making+friends+handshake+smiling"],
+      ["bizarre", "dziwaczny", "bizarre+surreal+melting+clocks+art"],
+      ["can't believe your ears", "nie móc uwierzyć własnym uszom", "shocked+listening+hand+to+ear+disbelief"],
+      ["common experience", "częste doznanie", "crowd+shared+moment+concert+unity"],
+      ["find common ground", "znaleźć wspólną płaszczyznę", "two+people+agreement+bridge+harmony"],
+      ["have the time of your life", "doskonale się bawić", "joyful+friends+dancing+party+confetti"],
+      ["place", "rozpoznać, zidentyfikować", "detective+recognizing+face+portrait+thinking"],
+      ["pluck up the courage (to do something)", "zdobyć się na odwagę (aby coś zrobić)", "courage+brave+leap+jumping+cliff"],
+      ["raise questions", "nasuwać pytania", "raising+question+marks+curiosity+debate"],
+      ["scan", "skanować", "document+barcode+scanner+laser"],
+      ["sophisticated", "skomplikowany, zaawansowany", "sophisticated+luxury+watch+mechanism"],
+      ["strike up (a conversation)", "nawiązać (rozmowę)", "strangers+starting+conversation+chatting+bench"]
+    ];
+
+    let currentUser = null;
+    let cards = [];
+    let currentCardIndex = -1;
+    let isFlipped = false;
+    let isAnswering = false;
+    let waitTimerInterval = null;
+    let sessionReviewCount = 0;
+    let streakCombo = 0;
+    let volumeLevel = 0.8;
+    let secretClicks = 0;
+    let secretTimer = null;
+    let auraTimer = 0;
+
+    // --- SYNTEZA DŹWIĘKÓW ---
+    let audioCtx = null;
+    let masterGain = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(volumeLevel, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+      }
+    }
+
+    function changeVolume(val) {
+      volumeLevel = val / 100;
+      document.getElementById('volValText').innerText = `${val}%`;
+      initAudio();
+      if (masterGain && audioCtx) {
+        masterGain.gain.setValueAtTime(volumeLevel, audioCtx.currentTime);
+      }
+      document.getElementById('muteBtn').innerText = volumeLevel === 0 ? '🔇' : '🔊';
+    }
+
+    function toggleVolumeBox() {
+      document.getElementById('volumeBox').classList.toggle('active');
+    }
+
+    function playSound(type) {
+      if (volumeLevel === 0) return;
+      initAudio();
+      if (!audioCtx || !masterGain) return;
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(masterGain);
+
+      if (type === 'good') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(900, now);
+        osc.frequency.exponentialRampToValueAtTime(1600, now + 0.15);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      } else if (type === 'master') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(783.99, now + 0.16);
+        osc.frequency.setValueAtTime(1046.50, now + 0.24);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.55);
+        osc.start(now);
+        osc.stop(now + 0.55);
+      } else if (type === 'bad') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.2);
+        gain.gain.setValueAtTime(0.45, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      } else if (type === 'luck') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(2000, now + 0.35);
+        gain.gain.setValueAtTime(0.5, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      }
+    }
+
+    // --- CZĄSTECZKI XP I AURY ---
+    const canvas = document.getElementById('fxCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function spawnXpOrbs(x, y, count = 25, isMaster = false) {
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: x, y: y,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.7) * 16,
+          size: Math.random() * 9 + 6,
+          color: isMaster 
+            ? (Math.random() > 0.5 ? '#55ff55' : '#ffff55') 
+            : (Math.random() > 0.3 ? '#80ff20' : '#55ff55'),
+          life: 1.0,
+          decay: Math.random() * 0.02 + 0.015,
+          text: null
+        });
+      }
+    }
+
+    function spawnAuraParticle(auraType) {
+      const wrap = document.getElementById('cardWrap');
+      if (!wrap || wrap.style.display === 'none') return;
+      const rect = wrap.getBoundingClientRect();
+      const x = rect.left + Math.random() * rect.width;
+      const y = rect.bottom - 10;
+
+      let color = '#fff';
+      let symbol = null;
+
+      if (auraType === 'hearts') {
+        symbol = '❤️';
+      } else if (auraType === 'cherry') {
+        symbol = '🌸';
+      } else if (auraType === 'runes') {
+        const glyphs = ['ᔑ', 'ʖ', 'ᓵ', '↸', 'ᒷ', '⎓', '⊣', 'ᔑ', '✨'];
+        symbol = glyphs[Math.floor(Math.random() * glyphs.length)];
+        color = '#c084fc';
+      } else if (auraType === 'flames') {
+        color = Math.random() > 0.4 ? '#ff5500' : '#ffaa00';
+      }
+
+      particles.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 2,
+        vy: - (Math.random() * 2 + 1.5),
+        size: Math.random() * 6 + 5,
+        color: color,
+        life: 1.0,
+        decay: 0.015,
+        text: symbol
+      });
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      auraTimer++;
+      if (auraTimer % 8 === 0 && currentUser) {
+        const u = getUserData(currentUser);
+        if (u.equipped && u.equipped.aura && u.equipped.aura !== 'none') {
+          spawnAuraParticle(u.equipped.aura);
+        }
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (!p.text) p.vy += 0.45;
+        p.life -= p.decay;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.globalAlpha = p.life;
+        if (p.text) {
+          ctx.font = '16px "VT323", monospace';
+          ctx.fillStyle = p.color;
+          ctx.fillText(p.text, p.x, p.y);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        }
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(renderParticles);
+    }
+    renderParticles();
+
+    function showFloatingText(text, color) {
+      const popup = document.getElementById('feedbackPopup');
+      popup.innerHTML = `<div class="floating-feedback" style="color:${color}">${text}</div>`;
+      setTimeout(() => { popup.innerHTML = ''; }, 750);
+    }
+
+    function getRank(lvl) {
+      if (lvl >= 29) return "🏆 Władca Netheritu";
+      if (lvl >= 25) return "👑 Pogromca Smoka Endu";
+      if (lvl >= 20) return "🌌 Netherowy Odkrywca";
+      if (lvl >= 15) return "🔮 Mistrz Zaklęć";
+      if (lvl >= 10) return "🏹 Diamentowy Łowca";
+      if (lvl >= 6)  return "⚔️ Żelazny Rycerz";
+      if (lvl >= 3)  return "🪨 Kamienny Górnik";
+      return "🪵 Początkujący Drwal";
+    }
+
+    // Obliczanie nagrody za konkretny poziom (od 5 do 50 szmaragdów)
+    function getLevelReward(lvl) {
+      if (lvl <= 0) return 5;
+      return Math.min(50, Math.round(5 + (lvl - 1) * 1.61));
+    }
+
+    // --- BAZA I UŻYTKOWNICY ---
+    function getSettings() {
+      const s = localStorage.getItem('mc_anki_settings');
+      return s ? JSON.parse(s) : { allowRegistration: true };
+    }
+    function saveSettings(s) {
+      localStorage.setItem('mc_anki_settings', JSON.stringify(s));
+    }
+
+    function getUsersDB() {
+      const db = localStorage.getItem('mc_anki_users_db');
+      return db ? JSON.parse(db) : {};
+    }
+    function saveUsersDB(db) {
+      localStorage.setItem('mc_anki_users_db', JSON.stringify(db));
+    }
+
+    function initUserCards() {
+      return rawData.map((item, index) => ({
+        id: index,
+        en: item[0],
+        pl: item[1],
+        img: `https://tse1.mm.bing.net/th?q=${item[2]}&w=450&h=260&c=7&rs=1&p=0&pid=1.7`,
+        status: 'new',
+        streak: 0,
+        due: 0
+      }));
+    }
+
+    function ensureUserData(u) {
+      if (!u) u = {};
+      if (!u.cards || !Array.isArray(u.cards)) u.cards = initUserCards();
+      if (typeof u.emeralds !== 'number') u.emeralds = 0;
+      if (typeof u.highestLevelClaimed !== 'number') {
+        const done = u.cards.filter(c => c.status === 'done').length;
+        u.highestLevelClaimed = Math.floor(done / 10);
+      }
+      if (!u.inventory || typeof u.inventory !== 'object') {
+        u.inventory = { backgrounds: ['default'], pets: [], frames: ['default'], auras: ['none'] };
+      }
+      if (!Array.isArray(u.inventory.backgrounds)) u.inventory.backgrounds = ['default'];
+      if (!Array.isArray(u.inventory.pets)) u.inventory.pets = [];
+      if (!Array.isArray(u.inventory.frames)) u.inventory.frames = ['default'];
+      if (!Array.isArray(u.inventory.auras)) u.inventory.auras = ['none'];
+      
+      if (!u.equipped || typeof u.equipped !== 'object') {
+        u.equipped = { background: 'default', pet: null, frame: 'default', aura: 'none' };
+      }
+      if (!u.equipped.background) u.equipped.background = 'default';
+      if (!u.equipped.frame) u.equipped.frame = 'default';
+      if (!u.equipped.aura) u.equipped.aura = 'none';
+      return u;
+    }
+
+    function getUserData(username) {
+      const db = getUsersDB();
+      let u = db[username];
+      if (!u) return ensureUserData({});
+      u = ensureUserData(u);
+      db[username] = u;
+      saveUsersDB(db);
+      return u;
+    }
+
+    // --- LOGOWANIE I REJESTRACJA ---
+    function handleAuth(e) {
+      e.preventDefault();
+      const login = document.getElementById('authLogin').value.trim();
+      const pass = document.getElementById('authPass').value.trim();
+      if (!login || !pass) return;
+
+      const db = getUsersDB();
+      const settings = getSettings();
+
+      if (!db[login]) {
+        if (!settings.allowRegistration) {
+          alert('Błędne dane logowania!');
+          return;
+        }
+        db[login] = ensureUserData({
+          password: pass,
+          cards: initUserCards(),
+          emeralds: 0
+        });
+        saveUsersDB(db);
+      } else {
+        if (db[login].password !== pass) {
+          alert('Błędne hasło dla tego konta!');
+          return;
+        }
+      }
+
+      currentUser = login;
+      localStorage.setItem('mc_anki_session_user', login);
+      
+      const userData = getUserData(login);
+      cards = userData.cards;
+      sessionReviewCount = 0;
+      streakCombo = 0;
+
+      applyCosmetics();
+      document.getElementById('currentUsername').innerText = currentUser;
+
+      showScreen('screenApp');
+      showNextCard();
+    }
+
+    function logout() {
+      saveCurrentUserData();
+      currentUser = null;
+      localStorage.removeItem('mc_anki_session_user');
+      showScreen('screenAuth');
+    }
+
+    function saveCurrentUserData() {
+      if (!currentUser) return;
+      const db = getUsersDB();
+      if (db[currentUser]) {
+        db[currentUser].cards = cards;
+        saveUsersDB(db);
+      }
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      if (screenId === 'screenApp') updateStats();
+    }
+
+    // --- STATYSTYKI I WYGLĄD ---
+    function updateStats() {
+      const cntNew = cards.filter(c => c.status === 'new').length;
+      const cntOne = cards.filter(c => c.status === 'learning' && c.streak === 1).length;
+      const cntDone = cards.filter(c => c.status === 'done').length;
+      const cntDue = cards.filter(c => c.status === 'new' || (c.status === 'learning' && c.due <= Date.now())).length;
+
+      document.getElementById('stNew').innerText = cntNew;
+      document.getElementById('stOne').innerText = cntOne;
+      document.getElementById('stDone').innerText = cntDone;
+      document.getElementById('stDue').innerText = cntDue;
+
+      const total = cards.length;
+      const xpLvl = Math.floor(cntDone / 10);
+      const rank = getRank(xpLvl);
+
+      document.getElementById('xpLvlBadge').innerText = `POZIOM XP: ${xpLvl}`;
+      document.getElementById('userRankTitle').innerText = rank;
+
+      // Pokaż postęp do następnego poziomu i nagrodę
+      if (xpLvl < 29) {
+        const curProgressInLevel = cntDone % 10;
+        const nextReward = getLevelReward(xpLvl + 1);
+        document.getElementById('nextLvlBadge').innerText = `DO AWANSU: ${curProgressInLevel}/10 (+${nextReward} 🟢)`;
+      } else {
+        document.getElementById('nextLvlBadge').innerText = `MAKSYMALNY POZIOM! 👑`;
+      }
+
+      const uData = getUserData(currentUser);
+      document.getElementById('emeraldCount').innerText = uData.emeralds || 0;
+
+      document.getElementById('barDone').style.width = `${(cntDone / total) * 100}%`;
+      document.getElementById('barOne').style.width = `${(cntOne / total) * 100}%`;
+      document.getElementById('barNew').style.width = `${(cntNew / total) * 100}%`;
+    }
+
+    function openStatsModal() {
+      try {
+        const cntNew = cards.filter(c => c.status === 'new').length;
+        const cntOne = cards.filter(c => c.status === 'learning' && c.streak === 1).length;
+        const cntDone = cards.filter(c => c.status === 'done').length;
+        const cntDue = cards.filter(c => c.status === 'new' || (c.status === 'learning' && c.due <= Date.now())).length;
+        const total = cards.length;
+        const xpLvl = Math.floor(cntDone / 10);
+
+        const uData = getUserData(currentUser);
+
+        document.getElementById('mRank').innerText = getRank(xpLvl);
+        document.getElementById('mXpLvl').innerText = xpLvl;
+        
+        if (xpLvl < 29) {
+          const wordsLeft = 10 - (cntDone % 10);
+          const nextReward = getLevelReward(xpLvl + 1);
+          document.getElementById('mNextLvlWords').innerText = `${wordsLeft} słówek (+${nextReward} 🟢)`;
+        } else {
+          document.getElementById('mNextLvlWords').innerText = `Osiągnięto Max!`;
+        }
+
+        document.getElementById('mEmeralds').innerText = uData.emeralds || 0;
+        document.getElementById('mPercent').innerText = `${((cntDone / total) * 100).toFixed(1)}%`;
+        document.getElementById('mDone').innerText = `${cntDone} / ${total}`;
+        document.getElementById('mOne').innerText = `${cntOne} / ${total}`;
+        document.getElementById('mNew').innerText = `${cntNew}`;
+        document.getElementById('mDue').innerText = `${cntDue}`;
+        document.getElementById('mSessionClicks').innerText = `${sessionReviewCount}`;
+
+        document.getElementById('statsModal').classList.add('active');
+      } catch (err) {
+        console.error("Błąd statystyk:", err);
+      }
+    }
+
+    function closeStatsModal() {
+      document.getElementById('statsModal').classList.remove('active');
+    }
+
+    // --- SKLEP I KOSMETYKA ---
+    function openShopModal() {
+      try {
+        const uData = getUserData(currentUser);
+        document.getElementById('shopUserEmeralds').innerText = uData.emeralds || 0;
+        updateShopButtons();
+        document.getElementById('shopModal').classList.add('active');
+      } catch (err) {
+        console.error("Błąd sklepu:", err);
+      }
+    }
+
+    function closeShopModal() {
+      document.getElementById('shopModal').classList.remove('active');
+    }
+
+    function updateShopButtons() {
+      const uData = getUserData(currentUser);
+      const inv = uData.inventory || {};
+      const eq = uData.equipped || {};
+
+      const categories = {
+        bg: ['default', 'birch', 'cherry', 'desert', 'nether', 'deepdark', 'snow', 'ocean', 'end'],
+        pet: ['wolf', 'cat', 'fox', 'frog', 'axolotl', 'bee', 'panda', 'allay', 'pig', 'creeper', 'golem', 'dragon'],
+        frame: ['default', 'gold', 'cherry', 'emerald', 'diamond', 'amethyst', 'magma', 'netherite', 'enchanted'],
+        aura: ['none', 'hearts', 'cherry', 'runes', 'flames']
+      };
+
+      Object.keys(categories).forEach(cat => {
+        const items = categories[cat];
+        const ownedList = inv[cat === 'bg' ? 'backgrounds' : (cat === 'pet' ? 'pets' : (cat === 'frame' ? 'frames' : 'auras'))] || [];
+        const currentEquipped = eq[cat === 'bg' ? 'background' : (cat === 'pet' ? 'pet' : (cat === 'frame' ? 'frame' : 'aura'))];
+
+        items.forEach(item => {
+          const btn = document.getElementById(`btn_${cat}_${item}`);
+          if (!btn) return;
+          if (currentEquipped === item) {
+            btn.innerText = 'Wyposażono';
+            btn.disabled = true;
+          } else if (ownedList.includes(item)) {
+            btn.innerText = 'Załóż';
+            btn.disabled = false;
+          } else {
+            btn.innerText = 'Kup';
+            btn.disabled = false;
+          }
+        });
+      });
+    }
+
+    function buyOrEquip(category, itemKey, cost) {
+      const db = getUsersDB();
+      const u = getUserData(currentUser);
+
+      const listKey = category === 'bg' ? 'backgrounds' : (category === 'pet' ? 'pets' : (category === 'frame' ? 'frames' : 'auras'));
+      const list = u.inventory[listKey];
+
+      if (list.includes(itemKey)) {
+        equipItem(category, itemKey);
+        return;
+      }
+
+      if (u.emeralds < cost) {
+        alert('Masz za mało Emeraldów! Ucz się dalej, aby zdobyć więcej.');
+        return;
+      }
+
+      u.emeralds -= cost;
+      list.push(itemKey);
+      db[currentUser] = u;
+      saveUsersDB(db);
+
+      equipItem(category, itemKey);
+      playSound('master');
+      openShopModal();
+    }
+
+    function equipItem(category, itemKey) {
+      const db = getUsersDB();
+      const u = getUserData(currentUser);
+
+      if (category === 'bg') u.equipped.background = itemKey;
+      if (category === 'pet') u.equipped.pet = itemKey;
+      if (category === 'frame') u.equipped.frame = itemKey;
+      if (category === 'aura') u.equipped.aura = itemKey;
+
+      db[currentUser] = u;
+      saveUsersDB(db);
+
+      applyCosmetics();
+      updateShopButtons();
+      updateStats();
+    }
+
+    function applyCosmetics() {
+      const uData = getUserData(currentUser);
+      const eq = uData.equipped;
+
+      document.body.className = '';
+      if (eq.background && eq.background !== 'default') {
+        document.body.classList.add(`theme-${eq.background}`);
+      }
+
+      const wrap = document.getElementById('cardWrap');
+      wrap.className = 'card-wrap';
+      if (eq.frame && eq.frame !== 'default') {
+        wrap.classList.add(`frame-${eq.frame}`);
+      }
+
+      const petEl = document.getElementById('draggablePet');
+      if (!eq.pet) {
+        petEl.style.display = 'none';
+      } else {
+        const petsMap = {
+          wolf: '🐺',
+          cat: '🐱',
+          fox: '🦊',
+          frog: '🐸',
+          axolotl: '🦎',
+          bee: '🐝',
+          panda: '🐼',
+          allay: '🧚',
+          pig: '👑🐷',
+          creeper: '💣',
+          golem: '🦾',
+          dragon: '🐉'
+        };
+        petEl.innerText = petsMap[eq.pet] || '🐾';
+        petEl.style.display = 'block';
+      }
+    }
+
+    function addEmeralds(count) {
+      const db = getUsersDB();
+      if (db[currentUser]) {
+        db[currentUser].emeralds = (db[currentUser].emeralds || 0) + count;
+        saveUsersDB(db);
+        document.getElementById('emeraldCount').innerText = db[currentUser].emeralds;
+      }
+    }
+
+    // --- OBSŁUGA PRZECIĄGANIA ZWIERZAKA (DRAG & DROP) ---
+    const petEl = document.getElementById('draggablePet');
+    let isDragging = false, startX, startY, initLeft, initTop;
+
+    function startDrag(e) {
+      isDragging = true;
+      const evt = e.touches ? e.touches[0] : e;
+      startX = evt.clientX;
+      startY = evt.clientY;
+      const rect = petEl.getBoundingClientRect();
+      initLeft = rect.left;
+      initTop = rect.top;
+      petEl.style.transition = 'none';
+    }
+
+    function onDrag(e) {
+      if (!isDragging) return;
+      const evt = e.touches ? e.touches[0] : e;
+      const dx = evt.clientX - startX;
+      const dy = evt.clientY - startY;
+      let newX = initLeft + dx;
+      let newY = initTop + dy;
+
+      newX = Math.max(10, Math.min(window.innerWidth - 60, newX));
+      newY = Math.max(10, Math.min(window.innerHeight - 60, newY));
+
+      petEl.style.left = `${newX}px`;
+      petEl.style.top = `${newY}px`;
+      petEl.style.right = 'auto';
+      petEl.style.bottom = 'auto';
+    }
+
+    function stopDrag() {
+      if (!isDragging) return;
+      isDragging = false;
+      const rect = petEl.getBoundingClientRect();
+      localStorage.setItem('mc_pet_pos', JSON.stringify({ x: rect.left, y: rect.top }));
+    }
+
+    petEl.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', stopDrag);
+
+    petEl.addEventListener('touchstart', startDrag, { passive: true });
+    window.addEventListener('touchmove', onDrag, { passive: true });
+    window.addEventListener('touchend', stopDrag);
+
+    function restorePetPosition() {
+      const pos = localStorage.getItem('mc_pet_pos');
+      if (pos) {
+        try {
+          const { x, y } = JSON.parse(pos);
+          petEl.style.left = `${Math.min(window.innerWidth - 60, x)}px`;
+          petEl.style.top = `${Math.min(window.innerHeight - 60, y)}px`;
+          petEl.style.right = 'auto';
+          petEl.style.bottom = 'auto';
+        } catch(e) {}
+      }
+    }
+
+    // --- LOGIKA FISZEK ---
+    function getNextDueCard() {
+      const now = Date.now();
+      const dueCards = cards.filter(c => c.status === 'learning' && c.due <= now);
+      if (dueCards.length > 0) return dueCards[Math.floor(Math.random() * dueCards.length)];
+      
+      const newCards = cards.filter(c => c.status === 'new');
+      if (newCards.length > 0) return newCards[0];
+
+      return null;
+    }
+
+    function showNextCard() {
+      if (waitTimerInterval) clearInterval(waitTimerInterval);
+
+      const cardEl = document.getElementById('cardElement');
+      const cardWrap = document.getElementById('cardWrap');
+      cardEl.classList.remove('flipped');
+      cardWrap.classList.remove('fx-good', 'fx-bad');
+      isFlipped = false;
+      isAnswering = false;
+      document.getElementById('actionRow').classList.remove('show');
+      document.getElementById('backImg').src = '';
+
+      updateStats();
+
+      const next = getNextDueCard();
+
+      if (!next) {
+        const waitingCards = cards.filter(c => c.status === 'learning');
+        if (waitingCards.length > 0) {
+          showWaitingScreen(waitingCards);
+        } else {
+          document.getElementById('cardWrap').style.display = 'none';
+          document.getElementById('waitBox').style.display = 'block';
+          document.getElementById('waitBox').innerHTML = `
+            <h2 style="color:#2ea82e; font-size:2rem;">WSZYSTKO W ODSTAWCE! 🏆</h2>
+            <p style="color:#111; font-size:1.2rem; margin:10px 0;">Opanowałeś całe 296 słówek na 100%!</p>
+            <button class="mc-btn" onclick="resetMyProgress()">Zacznij od nowa</button>
+          `;
+        }
+        return;
+      }
+
+      document.getElementById('cardWrap').style.display = 'block';
+      document.getElementById('waitBox').style.display = 'none';
+
+      currentCardIndex = cards.findIndex(c => c.id === next.id);
+      const card = cards[currentCardIndex];
+
+      document.getElementById('frontWord').innerText = card.pl;
+      document.getElementById('backWord').innerText = card.en;
+
+      const streakWrap = document.getElementById('frontStreakWrap');
+      if (card.status === 'learning' && card.streak === 1) {
+        streakWrap.innerHTML = `<span class="card-streak">⭐ Zrobione 1x dobrze (jeszcze 1 raz)</span>`;
+        document.getElementById('sub10min').innerText = '🚀 do odstawki (🟢 +3)';
+      } else {
+        streakWrap.innerHTML = ``;
+        document.getElementById('sub10min').innerText = '+1 dobrze (🟢 +1)';
+      }
+
+      setTimeout(() => {
+        document.getElementById('backImg').src = card.img;
+      }, 100);
+    }
+
+    function flipCard() {
+      if (isFlipped || isAnswering) return;
+      isFlipped = true;
+      document.getElementById('cardElement').classList.add('flipped');
+      document.getElementById('actionRow').classList.add('show');
+    }
+
+    function answerCard(type) {
+      if (!isFlipped || currentCardIndex === -1 || isAnswering) return;
+      isAnswering = true;
+      document.getElementById('actionRow').classList.remove('show');
+
+      const card = cards[currentCardIndex];
+      const cardWrap = document.getElementById('cardWrap');
+      sessionReviewCount++;
+
+      const rect = cardWrap.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      let isMasteredNow = false;
+
+      if (type === '1min') {
+        card.status = 'learning';
+        card.streak = 0;
+        card.due = Date.now() + (60 * 1000);
+        streakCombo = 0;
+
+        playSound('bad');
+        cardWrap.classList.add('fx-bad');
+        showFloatingText('POWTÓRKA! (0/2)', '#ff5555');
+
+      } else if (type === '10min') {
+        streakCombo++;
+
+        if (card.status === 'learning' && card.streak === 1) {
+          card.status = 'done';
+          card.streak = 2;
+          card.due = Infinity;
+          isMasteredNow = true;
+
+          addEmeralds(3);
+          playSound('master');
+          spawnXpOrbs(centerX, centerY, 35, true);
+          cardWrap.classList.add('fx-good');
+          showFloatingText('🏆 ODSTAWKA! +3 🟢', '#ffff55');
+        } else {
+          card.status = 'learning';
+          card.streak = 1;
+          card.due = Date.now() + (10 * 60 * 1000);
+
+          addEmeralds(1);
+          playSound('good');
+          spawnXpOrbs(centerX, centerY, 20, false);
+          cardWrap.classList.add('fx-good');
+          showFloatingText('+10 XP! +1 🟢', '#55ff55');
+        }
+
+        if (streakCombo > 0 && streakCombo % 5 === 0) {
+          setTimeout(() => {
+            playSound('luck');
+            addEmeralds(5);
+            spawnXpOrbs(centerX, centerY, 50, true);
+            showFloatingText('🌟 LUCKY DROP! +5 🟢!', '#55ffff');
+          }, 450);
+        }
+
+      } else if (type === 'know') {
+        card.status = 'done';
+        card.streak = 2;
+        card.due = Infinity;
+        streakCombo++;
+        isMasteredNow = true;
+
+        addEmeralds(2);
+        playSound('master');
+        spawnXpOrbs(centerX, centerY, 35, true);
+        cardWrap.classList.add('fx-good');
+        showFloatingText('⚡ ZAPAMIĘTANE! +2 🟢', '#55ffff');
+      }
+
+      // SPRAWDZENIE AWANSU NA KOLEJNY POZIOM I PRZYZNANIE JEDNORAZOWEJ NAGRODY
+      if (isMasteredNow) {
+        const doneCount = cards.filter(c => c.status === 'done').length;
+        const currentLevel = Math.floor(doneCount / 10);
+        const u = getUserData(currentUser);
+        
+        if (currentLevel > (u.highestLevelClaimed || 0)) {
+          const reward = getLevelReward(currentLevel);
+          u.highestLevelClaimed = currentLevel;
+          const db = getUsersDB();
+          db[currentUser] = u;
+          saveUsersDB(db);
+
+          setTimeout(() => {
+            playSound('master');
+            addEmeralds(reward);
+            spawnXpOrbs(window.innerWidth / 2, window.innerHeight / 2, 60, true);
+            showFloatingText(`🎉 POZIOM ${currentLevel}! +${reward} 🟢!`, '#ffff55');
+          }, 350);
+        }
+      }
+
+      saveCurrentUserData();
+
+      setTimeout(() => {
+        showNextCard();
+      }, 400);
+    }
+
+    function showWaitingScreen(waitingCards) {
+      document.getElementById('cardWrap').style.display = 'none';
+      document.getElementById('waitBox').style.display = 'block';
+
+      waitingCards.sort((a, b) => a.due - b.due);
+      const earliest = waitingCards[0];
+
+      function tick() {
+        const diff = Math.max(0, Math.ceil((earliest.due - Date.now()) / 1000));
+        const m = Math.floor(diff / 60).toString().padStart(2, '0');
+        const s = (diff % 60).toString().padStart(2, '0');
+        document.getElementById('waitTimer').innerText = `${m}:${s}`;
+        if (diff <= 0) {
+          clearInterval(waitTimerInterval);
+          showNextCard();
+        }
+      }
+      tick();
+      waitTimerInterval = setInterval(tick, 1000);
+    }
+
+    function forceNextDue() {
+      const waitingCards = cards.filter(c => c.status === 'learning');
+      if (waitingCards.length > 0) {
+        waitingCards.sort((a, b) => a.due - b.due);
+        waitingCards[0].due = Date.now();
+        saveCurrentUserData();
+        showNextCard();
+      }
+    }
+
+    function resetMyProgress() {
+      if (confirm('Zresetować Twój postęp do zera? (Emeraldy i przedmioty zostają)')) {
+        cards = initUserCards();
+        const u = getUserData(currentUser);
+        u.highestLevelClaimed = 0;
+        const db = getUsersDB();
+        db[currentUser] = u;
+        saveUsersDB(db);
+
+        saveCurrentUserData();
+        showNextCard();
+      }
+    }
+
+    // --- UKRYTY PANEL ADMINA (HASŁO: dupa123) ---
+    function handleSecretAdminClick() {
+      secretClicks++;
+      clearTimeout(secretTimer);
+      secretTimer = setTimeout(() => { secretClicks = 0; }, 2000);
+      if (secretClicks >= 5) {
+        secretClicks = 0;
+        showAdminPrompt();
+      }
+    }
+
+    function showAdminPrompt() {
+      showScreen('screenAdmin');
+      document.getElementById('adminAuthBox').style.display = 'block';
+      document.getElementById('adminContent').style.display = 'none';
+      document.getElementById('adminPassInput').value = '';
+    }
+
+    function closeAdminScreen() {
+      if (window.location.hash === '#admin') {
+        history.replaceState(null, null, ' ');
+      }
+      showScreen(currentUser ? 'screenApp' : 'screenAuth');
+    }
+
+    function unlockAdmin() {
+      const pass = document.getElementById('adminPassInput').value;
+      if (pass === 'dupa123') { // NOWE HASŁO ADMINA
+        document.getElementById('adminAuthBox').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+
+        const settings = getSettings();
+        document.getElementById('regToggle').checked = settings.allowRegistration;
+        renderAdminUserList();
+      } else {
+        alert('Nieprawidłowe hasło admina!');
+      }
+    }
+
+    function toggleRegistration(val) {
+      const s = getSettings();
+      s.allowRegistration = val;
+      saveSettings(s);
+    }
+
+    function adminCreateUser(e) {
+      e.preventDefault();
+      const login = document.getElementById('newAdminUser').value.trim();
+      const pass = document.getElementById('newAdminPass').value.trim();
+      if (!login || !pass) return;
+
+      const db = getUsersDB();
+      if (db[login]) {
+        alert('Użytkownik o takim nicku już istnieje!');
+        return;
+      }
+
+      db[login] = ensureUserData({
+        password: pass,
+        cards: initUserCards(),
+        emeralds: 0
+      });
+      saveUsersDB(db);
+
+      document.getElementById('newAdminUser').value = '';
+      document.getElementById('newAdminPass').value = '';
+      alert(`Pomyślnie utworzono konto dla: ${login}`);
+      renderAdminUserList();
+    }
+
+    const itemNamesMap = {
+      default: "Jaskinia / Zwykła",
+      birch: "Brzozowy Gaj",
+      cherry: "🌸 Kwitnąca Wiśnia",
+      desert: "🏜️ Pustynia",
+      nether: "🌋 Nether",
+      deepdark: "🌌 Mroczne Głębiny",
+      snow: "❄️ Tundra",
+      ocean: "🌊 Ocean",
+      end: "🔮 End",
+      wolf: "🐺 Wilczek",
+      cat: "🐱 Kotek",
+      fox: "🦊 Lisek",
+      frog: "🐸 Żabka",
+      axolotl: "🦎 Aksolotl",
+      bee: "🐝 Pszczółka",
+      panda: "🐼 Panda",
+      allay: "🧚 Allay",
+      pig: "👑 Świnka",
+      creeper: "💣 Creeper",
+      golem: "🦾 Golem",
+      dragon: "🐉 Smok Endu",
+      gold: "🥇 Złota",
+      emerald: "🟢 Szmaragdowa",
+      diamond: "💎 Diamentowa",
+      amethyst: "🔮 Ametystowa",
+      magma: "🔥 Magmowa",
+      netherite: "🌌 Netheritowa",
+      enchanted: "✨ Zaklęty Blask",
+      none: "Brak aury",
+      hearts: "❤️ Serca",
+      runes: "🔮 Runy Zaklęć",
+      flames: "🔥 Płomienie",
+    };
+
+    function renderAdminUserList() {
+      const db = getUsersDB();
+      const container = document.getElementById('adminUserList');
+      container.innerHTML = '';
+
+      const users = Object.keys(db);
+      if (users.length === 0) {
+        container.innerHTML = '<p style="color:#aaa; padding:10px;">Brak zarejestrowanych graczy.</p>';
+        return;
+      }
+
+      users.forEach(user => {
+        const u = ensureUserData(db[user]);
+        const uCards = u.cards || [];
+        const done = uCards.filter(c => c.status === 'done').length;
+        const one = uCards.filter(c => c.status === 'learning' && c.streak === 1).length;
+        const newCards = uCards.filter(c => c.status === 'new').length;
+        const due = uCards.filter(c => c.status === 'new' || (c.status === 'learning' && c.due <= Date.now())).length;
+        const percent = ((done / 296) * 100).toFixed(0);
+        const xpLvl = Math.floor(done / 10);
+        const rank = getRank(xpLvl);
+
+        const inv = u.inventory || {};
+        const eq = u.equipped || {};
+
+        const allPurchases = [
+          ...(inv.backgrounds || []).filter(b => b !== 'default').map(b => itemNamesMap[b] || b),
+          ...(inv.pets || []).map(p => itemNamesMap[p] || p),
+          ...(inv.frames || []).filter(f => f !== 'default').map(f => itemNamesMap[f] || f),
+          ...(inv.auras || []).filter(a => a !== 'none').map(a => itemNamesMap[a] || a)
+        ];
+        const purchasesText = allPurchases.length > 0 ? allPurchases.join(', ') : 'brak zakupów';
+        const activePetText = eq.pet ? (itemNamesMap[eq.pet] || eq.pet) : 'brak';
+        const activeBgText = itemNamesMap[eq.background] || eq.background || 'Jaskinia';
+        const activeFrameText = itemNamesMap[eq.frame] || eq.frame || 'Zwykła';
+        const activeAuraText = itemNamesMap[eq.aura] || eq.aura || 'brak';
+
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'admin-user-card';
+        cardDiv.innerHTML = `
+          <div class="admin-user-header">
+            <div>
+              <span style="font-size:1.35rem; color:#55ffff; font-weight:bold;">${user}</span>
+              <span style="color:#ffaa00; font-size:1rem; margin-left:8px;">[ ${rank} ]</span>
+            </div>
+            <div style="font-size:1.15rem; color:#ffaa00;">
+              Hasło: <b style="color:#fff; background:#000; padding:2px 6px;">${u.password}</b>
+            </div>
+          </div>
+
+          <div class="admin-stats-line">
+            <span>🟩 Odstawka: <b style="color:#55ff55;">${done}/296 (${percent}%)</b></span>
+            <span>🟨 1x dobrze: <b style="color:#ffaa00;">${one}</b></span>
+            <span>⬜ Nieruszone: <b style="color:#bbb;">${newCards}</b></span>
+            <span>⏰ Do powtórki: <b style="color:#55ffff;">${due}</b></span>
+            <span>⭐ Poziom XP: <b style="color:#80ff20;">${xpLvl}</b></span>
+          </div>
+
+          <div class="admin-inventory-box">
+            <div>🟢 Szmaragdy: <b style="color:#55ff55; font-size:1.1rem;">${u.emeralds || 0}</b></div>
+            <div>🐾 Pet: <b style="color:#fff;">${activePetText}</b> | Tło: <b style="color:#fff;">${activeBgText}</b> | Ramka: <b style="color:#fff;">${activeFrameText}</b> | Aura: <b style="color:#ffaa00;">${activeAuraText}</b></div>
+            <div style="margin-top:2px;">🎒 Kupione w sklepie: <span style="color:#ffaa00;">${purchasesText}</span></div>
+          </div>
+
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <button class="mc-btn" style="padding:2px 8px; font-size:0.85rem;" onclick="adminChangePasswordPrompt('${user}')">🔑 Zmień Hasło</button>
+            <button class="mc-btn mc-btn-green" style="padding:2px 8px; font-size:0.85rem;" onclick="adminAddEmeraldsPrompt('${user}')">🟢 Dodaj Szmaragdy</button>
+            <button class="mc-btn" style="padding:2px 8px; font-size:0.85rem;" onclick="adminResetUser('${user}')">Reset Kart</button>
+            <button class="mc-btn mc-btn-red" style="padding:2px 8px; font-size:0.85rem;" onclick="adminDeleteUser('${user}')">Usuń Konto</button>
+          </div>
+        `;
+        container.appendChild(cardDiv);
+      });
+    }
+
+    function adminChangePasswordPrompt(username) {
+      const db = getUsersDB();
+      if (!db[username]) return;
+
+      const newPass = prompt(`Wpisz nowe hasło dla gracza ${username}:`, db[username].password);
+      if (newPass && newPass.trim() !== '') {
+        db[username].password = newPass.trim();
+        saveUsersDB(db);
+        alert(`Hasło dla gracza ${username} zostało zmienione na: ${newPass.trim()}`);
+        renderAdminUserList();
+      }
+    }
+
+    function adminAddEmeraldsPrompt(username) {
+      const db = getUsersDB();
+      if (!db[username]) return;
+
+      const amt = prompt(`Ile szmaragdów dodać graczowi ${username}? (np. 50):`, "50");
+      const num = parseInt(amt, 10);
+      if (!isNaN(num)) {
+        db[username].emeralds = (db[username].emeralds || 0) + num;
+        saveUsersDB(db);
+        if (currentUser === username) {
+          document.getElementById('emeraldCount').innerText = db[username].emeralds;
+        }
+        alert(`Dodano ${num} szmaragdów graczowi ${username}!`);
+        renderAdminUserList();
+      }
+    }
+
+    function adminResetUser(username) {
+      if (confirm(`Zresetować postęp kart gracza ${username}? (Zakupione przedmioty zostają)`)) {
+        const db = getUsersDB();
+        if (db[username]) {
+          db[username].cards = initUserCards();
+          db[username].highestLevelClaimed = 0;
+          saveUsersDB(db);
+          if (currentUser === username) cards = db[username].cards;
+          renderAdminUserList();
+        }
+      }
+    }
+
+    function adminDeleteUser(username) {
+      if (confirm(`Czy na pewno trwale USUNĄĆ konto gracza ${username}?`)) {
+        const db = getUsersDB();
+        delete db[username];
+        saveUsersDB(db);
+
+        if (currentUser === username) {
+          logout();
+        } else {
+          renderAdminUserList();
+        }
+      }
+    }
+
+    function adminResetAll() {
+      if (confirm('UWAGA: Skasować WSZYSTKICH użytkowników i wyczyścić całą bazę?')) {
+        localStorage.removeItem('mc_anki_users_db');
+        logout();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
+        e.preventDefault();
+        showAdminPrompt();
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#admin') showAdminPrompt();
+    });
+
+    // Start
+    window.onload = () => {
+      restorePetPosition();
+      if (window.location.hash === '#admin') {
+        showAdminPrompt();
+        return;
+      }
+      const savedUser = localStorage.getItem('mc_anki_session_user');
+      const db = getUsersDB();
+      if (savedUser && db[savedUser]) {
+        currentUser = savedUser;
+        const uData = getUserData(savedUser);
+        cards = uData.cards;
+        document.getElementById('currentUsername').innerText = currentUser;
+        applyCosmetics();
+        showScreen('screenApp');
+        showNextCard();
+      } else {
+        showScreen('screenAuth');
+      }
+    };
+  </script>
+</body>
+</html>
