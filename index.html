@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Minecraft Fiszki - 296 Słówek</title>
+  <title>Minecraft Fiszki - Baza Online</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2ea82e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="https://api.iconify.design/noto:gem-stone.svg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -16,7 +25,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'VT323', monospace; }
 
-    /* PRAWDZIWE TŁA MINECRAFTA (Biomy) */
+    /* TŁA MINECRAFTA (Biomy) */
     body {
       background-color: #121212;
       background: linear-gradient(rgba(10, 10, 15, 0.72), rgba(10, 10, 15, 0.82)), 
@@ -72,7 +81,7 @@
       z-index: 50;
     }
 
-    /* PRZESUWANY ZWIERZAK NA EKRANIE */
+    /* ZWIERZAK DO PRZECIĄGANIA */
     .draggable-pet {
       position: fixed;
       bottom: 75px;
@@ -96,7 +105,6 @@
       50% { transform: translateY(-8px); }
     }
 
-    /* Pudełko GUI */
     .mc-box {
       background: #c6c6c6;
       border: 4px solid #000;
@@ -107,7 +115,6 @@
       max-width: 480px;
     }
 
-    /* Przyciski */
     .mc-btn {
       background: #7a7a7a;
       border: 3px solid #000;
@@ -137,7 +144,6 @@
     .screen { width: 100%; max-width: 480px; display: none; }
     .screen.active { display: block; }
 
-    /* Nagłówek */
     header {
       width: 100%;
       max-width: 480px;
@@ -166,7 +172,6 @@
       border-radius: 4px;
     }
 
-    /* XP Bar */
     .xp-section { width: 100%; max-width: 480px; margin-bottom: 8px; }
     .xp-header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; font-size: 1.1rem; }
     .xp-level-badge { color: #80ff20; text-shadow: 2px 2px #000; font-weight: bold; }
@@ -189,7 +194,6 @@
     .stat-pill { background: #222; border: 2px solid #000; padding: 3px 2px; color: #fff; }
     .stat-pill b { display: block; font-size: 1.25rem; }
 
-    /* Fiszka */
     .card-wrap {
       width: 100%;
       height: 380px;
@@ -226,7 +230,7 @@
     }
     .card-back { transform: rotateY(180deg); }
 
-    /* Ramki fiszki (ze Sklepu) */
+    /* Ramki */
     .frame-gold .card-side { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.4), inset -4px -4px #5c4300, inset 4px 4px #ffe766; }
     .frame-cherry .card-side { border-color: #ff99cc; box-shadow: 0 0 16px rgba(255,153,204,0.45), inset -4px -4px #661a40, inset 4px 4px #ffcce6; }
     .frame-emerald .card-side { border-color: #55ff55; box-shadow: 0 0 16px rgba(85,255,85,0.45), inset -4px -4px #145414, inset 4px 4px #5eff5e; }
@@ -234,11 +238,8 @@
     .frame-amethyst .card-side { border-color: #c084fc; box-shadow: 0 0 18px rgba(192,132,252,0.5), inset -4px -4px #4c1d95, inset 4px 4px #e9d5ff; }
     .frame-magma .card-side { border-color: #ff5500; box-shadow: 0 0 20px rgba(255,85,0,0.55), inset -4px -4px #7a1500, inset 4px 4px #ff9955; }
     .frame-netherite .card-side { border-color: #6c4f70; box-shadow: 0 0 15px rgba(108,79,112,0.5), inset -4px -4px #261629, inset 4px 4px #a078a6; }
-
-    /* POPRAWIONY ZAKLĘTY BLASK: Mieni się TYLKO ramka i poświata, zdjęcie zachowuje 100% normalne kolory */
-    .frame-enchanted .card-side {
-      animation: enchantedBorderGlow 4s infinite linear;
-    }
+    
+    .frame-enchanted .card-side { animation: enchantedBorderGlow 4s infinite linear; }
     @keyframes enchantedBorderGlow {
       0% { border-color: #e879f9; box-shadow: 0 0 22px rgba(232,121,249,0.7), inset -4px -4px #701a75, inset 4px 4px #f5d0fe; }
       25% { border-color: #a855f7; box-shadow: 0 0 22px rgba(168,85,247,0.7), inset -4px -4px #581c87, inset 4px 4px #d8b4fe; }
@@ -331,7 +332,6 @@
     }
     .auth-input:focus { border-color: #55ffff; }
 
-    /* Karty graczy w panelu admina */
     .admin-user-card {
       background: #1e1e1e;
       border: 3px solid #000;
@@ -366,7 +366,6 @@
       margin-top: 4px;
     }
 
-    /* Modale */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -380,7 +379,6 @@
     .modal-overlay.active { display: flex; }
     .stat-row { display: flex; justify-content: space-between; border-bottom: 2px dashed #444; padding: 6px 0; font-size: 1.25rem; }
 
-    /* Sklep kafelki */
     .shop-section-title { font-size: 1.3rem; color: #ffaa00; margin: 14px 0 6px 0; text-align: left; border-bottom: 2px solid #000; }
     .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
     .shop-item {
@@ -412,11 +410,17 @@
     }
     .volume-box.active { display: flex; }
 
-    /* RESPONSIVE DESKTOP */
+    .cloud-status {
+      font-size: 0.9rem;
+      padding: 4px 8px;
+      background: #000;
+      color: #ffaa00;
+      border: 1px solid #444;
+      margin-top: 8px;
+    }
+
     @media (min-width: 768px) {
-      .mc-box, .screen, header, .xp-section, .card-wrap, .action-row {
-        max-width: 740px;
-      }
+      .mc-box, .screen, header, .xp-section, .card-wrap, .action-row { max-width: 740px; }
       .card-wrap { height: 460px; }
       .card-img-frame { height: 250px; }
       .card-word { font-size: 2.6rem; }
@@ -440,21 +444,20 @@
 
   <canvas id="fxCanvas"></canvas>
 
-  <!-- PRZESUWANY ZWIERZAK NA EKRANIE -->
   <div id="draggablePet" class="draggable-pet" title="Złap i przeciągnij mnie po ekranie!">🐺</div>
 
   <!-- EKRAN LOGOWANIA -->
   <div id="screenAuth" class="screen active">
     <div class="mc-box" style="margin-top: 40px; text-align: center;">
-      <!-- 5x kliknięcie otwiera admina -->
       <h2 style="font-size: 2.3rem; color: #000; margin-bottom: 4px; cursor: default;" onclick="handleSecretAdminClick()">MINECRAFT FISZKI</h2>
       <p style="font-size: 1.2rem; color: #333;">Podaj nick i hasło aby wejść do gry:</p>
       
       <form class="auth-form" onsubmit="handleAuth(event)">
         <input type="text" id="authLogin" class="auth-input" placeholder="TWÓJ NICK" required autocomplete="username">
         <input type="password" id="authPass" class="auth-input" placeholder="HASŁO" required autocomplete="current-password">
-        <button type="submit" class="mc-btn mc-btn-green" style="font-size: 1.45rem;">GRAJ / WEJDŹ</button>
+        <button type="submit" id="authSubmitBtn" class="mc-btn mc-btn-green" style="font-size: 1.45rem;">GRAJ / WEJDŹ</button>
       </form>
+      <div id="cloudStatusBadge" class="cloud-status">Łączenie z bazą JSONBin...</div>
     </div>
   </div>
 
@@ -467,6 +470,7 @@
       </div>
 
       <div style="display:flex; gap:6px; align-items:center;">
+        <button id="pwaInstallBtn" class="mc-btn mc-btn-green" onclick="installPWA()" style="display:none; padding: 2px 7px; font-size: 0.95rem;">📲 Pobierz</button>
         <div class="emerald-badge" title="Twoje Emeraldy">
           <span>🟢</span><b id="emeraldCount">0</b>
         </div>
@@ -476,14 +480,12 @@
         <button class="mc-btn" onclick="logout()" style="padding: 2px 7px; font-size: 0.95rem;">🚪</button>
       </div>
 
-      <!-- Popover regulacji głośności -->
       <div class="volume-box" id="volumeBox">
         <span style="font-size:1.1rem; color:#55ffff;">GŁOŚNOŚĆ: <span id="volValText">80%</span></span>
         <input type="range" id="volRange" min="0" max="100" value="80" oninput="changeVolume(this.value)" style="cursor:pointer; width:130px;">
       </div>
     </header>
 
-    <!-- XP Bar i Ranga -->
     <div class="xp-section">
       <div class="xp-header-info">
         <span class="xp-level-badge" id="xpLvlBadge">POZIOM XP: 0</span>
@@ -518,14 +520,12 @@
     <div class="card-wrap" id="cardWrap" onclick="flipCard()">
       <div id="feedbackPopup"></div>
       <div class="card-inner" id="cardElement">
-        <!-- PRZÓD -->
         <div class="card-side card-front">
           <div class="card-title">POLSKI</div>
           <div id="frontStreakWrap"></div>
           <div class="card-word" id="frontWord">...</div>
           <div style="color: #888; font-size: 1.05rem;">[ Dotknij fiszki, aby obrócić ]</div>
         </div>
-        <!-- TYŁ -->
         <div class="card-side card-back">
           <div class="card-title">ANGIELSKI</div>
           <div class="card-word" id="backWord" style="font-size: 1.7rem; margin: 4px 0;">...</div>
@@ -537,7 +537,6 @@
       </div>
     </div>
 
-    <!-- PRZYCISKI -->
     <div class="action-row" id="actionRow">
       <button class="mc-btn mc-btn-red btn-half" onclick="answerCard('1min')">
         1 MINUTA
@@ -616,7 +615,7 @@
     </div>
   </div>
 
-  <!-- ROZBUDOWANY MODAL SKLEPU -->
+  <!-- MODAL SKLEPU -->
   <div class="modal-overlay" id="shopModal" onclick="closeShopModal()">
     <div class="mc-box" style="max-width: 620px; max-height:88vh; overflow-y:auto;" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -628,7 +627,7 @@
         Twoje saldo: <b>🟢 <span id="shopUserEmeralds">0</span> Emeraldów</b>
       </div>
 
-      <!-- Kategoria: Biomy (Tła) -->
+      <!-- Biomy -->
       <div class="shop-section-title">🏞️ BIOMY (TŁA GRY)</div>
       <div class="shop-grid">
         <div class="shop-item">
@@ -678,7 +677,7 @@
         </div>
       </div>
 
-      <!-- Kategoria: Pety (Emotki) -->
+      <!-- Pety -->
       <div class="shop-section-title">🐾 PLUSZAKI / PETY (DO PRZECIĄGANIA)</div>
       <div class="shop-grid">
         <div class="shop-item">
@@ -747,7 +746,7 @@
         </div>
       </div>
 
-      <!-- Kategoria: Ramki -->
+      <!-- Ramki -->
       <div class="shop-section-title">🖼️ RAMKI FISZKI</div>
       <div class="shop-grid">
         <div class="shop-item">
@@ -797,7 +796,7 @@
         </div>
       </div>
 
-      <!-- Kategoria: Aury i Efekty -->
+      <!-- Aury -->
       <div class="shop-section-title">✨ AURY I EFEKTY MAGICZNE</div>
       <div class="shop-grid">
         <div class="shop-item">
@@ -844,7 +843,6 @@
       </div>
 
       <div id="adminContent" style="display:none;">
-        
         <div style="background:#222; border:2px solid #000; padding:10px; color:#fff; margin-bottom:12px;">
           <h3 style="font-size:1.2rem; color:#55ffff; margin-bottom:6px;">USTAWIENIA REJESTRACJI</h3>
           <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:1.15rem;">
@@ -862,11 +860,11 @@
           </form>
         </div>
 
-        <p style="color:#000; margin-bottom: 6px; font-weight:bold; font-size:1.2rem;">Zarejestrowani gracze (postępy, hasła i ekwipunek):</p>
+        <p style="color:#000; margin-bottom: 6px; font-weight:bold; font-size:1.2rem;">Zarejestrowani gracze (baza w chmurze JSONBin):</p>
         <div id="adminUserList" style="max-height:420px; overflow-y:auto;"></div>
 
         <button class="mc-btn mc-btn-red" onclick="adminResetAll()" style="width:100%; margin-top: 15px; font-size: 1rem;">
-          WYCZYŚĆ CAŁĄ BAZĘ DANYCH
+          WYCZYŚĆ CAŁĄ BAZĘ ONLINE
         </button>
       </div>
     </div>
@@ -877,304 +875,64 @@
   </footer>
 
   <script>
-    const rawData = [
-      ["address", "adres", "postal+address+envelope"],
-      ["age", "wiek", "age+birthday+cake+candles"],
-      ["date of birth", "data urodzenia", "date+of+birth+passport+id"],
-      ["divorced", "rozwiedziony", "divorced+couple+broken+ring"],
-      ["female", "kobieta", "female+woman+portrait"],
-      ["first name", "imię", "first+name+hello+badge+nametag"],
-      ["gender", "płeć", "gender+symbols+male+female"],
-      ["male", "mężczyzna", "male+man+portrait+face"],
-      ["marital status", "stan cywilny", "marital+status+form+checkbox"],
-      ["married", "żonaty, zamężna", "married+couple+wedding+rings"],
-      ["nationality", "narodowość", "world+passports+nationalities+flags"],
-      ["occupation", "zawód", "different+occupations+professions+jobs"],
-      ["single", "stanu wolnego", "single+person+walking+alone"],
-      ["surname", "nazwisko", "signature+last+name+surname"],
-      ["widowed", "owdowiały", "widow+mourning+loss+memory"],
-      ["country of residence", "kraj zamieszkania", "world+map+globe+country+residence"],
-      ["distinguishing features", "znaki szczególne", "distinguishing+features+face+scar+mole"],
-      ["ethnic origin", "pochodzenie etniczne", "diverse+ethnic+faces+cultures"],
-      ["next of kin", "najbliższy krewny", "family+emergency+contact+support"],
-      ["attractive", "atrakcyjny", "attractive+beautiful+person+smile"],
-      ["beautiful", "piękny", "beautiful+woman+face+portrait"],
-      ["fit", "sprawny, w dobrej formie", "fit+athletic+person+jogging"],
-      ["good-looking", "przystojny, ładny", "good+looking+person+smile"],
-      ["handsome", "przystojny", "handsome+man+smiling+face"],
-      ["plain (wygląd)", "pospolity, nieatrakcyjny", "plain+simple+ordinary+person+face"],
-      ["pretty", "ładny", "pretty+cute+girl+smiling"],
-      ["ugly", "brzydki", "ugly+funny+creature+face"],
-      ["cut down on sth", "ograniczać (ilość czegoś)", "cutting+down+sugar+diet+stop"],
-      ["go for (darker colours)", "wybierać, sięgać po (ciemniejsze kolory)", "dark+colored+clothes+wardrobe+black"],
-      ["paint your nails", "malować paznokcie", "painting+nails+red+manicure"],
-      ["put on / lose weight", "przybierać / tracić na wadze", "weight+loss+gain+scale+tape+measure"],
-      ["straighten", "prostować (włosy)", "straightening+hair+flat+iron"],
-      ["take up (a hobby/a sport)", "zacząć (hobby/uprawiać sport)", "starting+new+hobby+tennis+painting"],
-      ["fat", "gruby", "fat+big+belly+man"],
-      ["muscular", "muskularny", "muscular+bodybuilder+biceps"],
-      ["obese", "otyły", "obese+weight+scale+measure"],
-      ["overweight/underweight", "z nadwagą/niedowagą", "overweight+and+underweight+comparison"],
-      ["plump", "pulchny, puszysty", "plump+chubby+cheeks+face"],
-      ["skinny", "chudy", "skinny+thin+arms+ribs"],
-      ["slim", "szczupły", "slim+slender+waist+fit"],
-      ["well-built", "dobrze zbudowany", "well+built+athletic+male+physique"],
-      ["lanky", "tyczkowaty", "lanky+tall+thin+man+legs"],
-      ["stocky", "krępy", "stocky+short+broad+shoulders+man"],
-      ["bald", "łysy", "bald+man+head+shaved"],
-      ["blond", "blond", "blonde+hair+woman+portrait"],
-      ["curly", "kręcone", "curly+hair+curls+hairstyle"],
-      ["dark", "ciemny", "dark+black+hair+portrait"],
-      ["dyed", "farbowane", "dyed+colorful+hair+pink+blue"],
-      ["red", "rude", "redhead+red+hair+freckles"],
-      ["shoulder-length", "do ramion", "shoulder+length+bob+hairstyle"],
-      ["straight", "proste", "straight+long+smooth+hair"],
-      ["wavy", "falujące", "wavy+beach+waves+hair"],
-      ["auburn", "kasztanowe", "auburn+hair+color+chestnut"],
-      ["fine/thick", "cienkie, rzadkie/gęste", "fine+hair+vs+thick+hair+density"],
-      ["fringe", "grzywka", "hair+bangs+fringe+forehead"],
-      ["have a centre/side parting", "mieć przedziałek na środku/z boku", "hair+middle+parting+side+parting"],
-      ["braid", "warkocz", "braided+hair+french+braid"],
-      ["ponytail", "kucyk", "high+ponytail+hairstyle"],
-      ["receding hairline", "włosy rzednące na skroniach", "receding+hairline+temples+male"],
-      ["wear your hair loose/up", "nosić włosy rozpuszczone/spięte", "hair+loose+vs+hair+updo+bun"],
-      ["beard", "broda", "men+full+beard+barber"],
-      ["freckles", "piegi", "freckles+cheeks+nose+face"],
-      ["moustache", "wąsy", "men+mustache+moustache+lip"],
-      ["pale/tanned/dark complexion", "blada/opalona/ciemna cera", "pale+skin+vs+tanned+skin+complexion"],
-      ["pierced ears", "przekłute uszy", "pierced+ears+earrings+earlobe"],
-      ["scar", "blizna", "skin+scar+wound+healing"],
-      ["spotty", "pryszczaty", "acne+spots+face+pimples"],
-      ["tattoo", "tatuaż", "arm+tattoo+ink+art"],
-      ["wrinkles", "zmarszczki", "face+wrinkles+aging+eyes"],
-      ["birthmark", "znamię", "birthmark+skin+pigmentation"],
-      ["clean-shaven", "gładko ogolony", "clean+shaven+man+smooth+chin"],
-      ["clear skin", "gładka skóra", "clear+healthy+glowing+skin+face"],
-      ["double chin", "podwójny podbródek", "double+chin+neck+face"],
-      ["high cheekbones", "wystające kości policzkowe", "high+cheekbones+female+model+contour"],
-      ["high forehead", "wysokie czoło", "high+forehead+face+profile"],
-      ["piercing blue eyes", "przenikliwe niebieskie oczy", "piercing+vibrant+blue+eyes+close+up"],
-      ["blouse", "bluzka", "women+elegant+silk+blouse"],
-      ["boots", "buty", "leather+winter+boots+shoes"],
-      ["bra", "biustonosz", "women+brassiere+bra+lingerie"],
-      ["casual", "codzienny, swobodny", "casual+outfit+jeans+tshirt"],
-      ["coat", "płaszcz", "classic+winter+trench+coat"],
-      ["dress", "sukienka", "women+elegant+dress+fashion"],
-      ["fashionable/trendy", "modny", "fashionable+trendy+streetwear+style"],
-      ["fleece", "bluza polarowa", "warm+fleece+jacket+outdoor"],
-      ["gloves", "rękawiczki", "winter+wool+gloves+hands"],
-      ["hat", "kapelusz", "classic+fedora+sun+hat"],
-      ["jacket", "kurtka", "leather+jacket+stylish+zipper"],
-      ["jeans", "dżinsy", "classic+blue+denim+jeans"],
-      ["jumper", "sweter", "knitted+cozy+wool+sweater+jumper"],
-      ["old-fashioned", "staromodny, staroświecki", "old+fashioned+vintage+retro+clothing"],
-      ["pyjamas", "piżama", "sleepwear+cozy+pajamas+pyjamas"],
-      ["sandals", "sandały", "summer+leather+sandals+shoes"],
-      ["shirt", "koszula", "formal+white+dress+shirt+collar"],
-      ["shoes", "buty", "classic+leather+dress+shoes"],
-      ["shorts", "szorty", "casual+summer+shorts+denim"],
-      ["skirt", "spódnica", "women+pleated+fashion+skirt"],
-      ["smart", "elegancki", "smart+casual+elegant+business+man"],
-      ["socks", "skarpety", "cotton+socks+colored+feet"],
-      ["suit", "garnitur", "men+tailored+business+suit+tie"],
-      ["sweatshirt", "bluza sportowa", "cotton+crewneck+sweatshirt"],
-      ["tie", "krawat", "silk+necktie+suit+knot"],
-      ["tracksuit", "dres", "sport+tracksuit+jacket+sweatpants"],
-      ["trainers", "obuwie sportowe", "running+sneakers+trainers+shoes"],
-      ["trousers", "spodnie", "formal+tailored+dress+trousers+pants"],
-      ["underwear", "bielizna", "cotton+boxer+briefs+underwear"],
-      ["waistcoat", "kamizelka", "formal+suit+waistcoat+vest"],
-      ["wear", "nosić, mieć na sobie", "person+wearing+stylish+clothes"],
-      ["ballgown", "suknia balowa", "magnificent+evening+ballgown+dress"],
-      ["boat-necked", "z szerokim dekoltem", "boat+neckline+dress+top"],
-      ["cardigan", "rozpinany sweter", "knitted+button+cardigan+sweater"],
-      ["collar", "kołnierzyk", "shirt+collar+necktie+formal"],
-      ["cuffs", "mankiety", "shirt+sleeve+cuffs+cufflinks"],
-      ["dressing gown", "szlafrok", "plush+bathrobe+dressing+gown"],
-      ["high heels", "buty na wysokim obcasie", "high+heels+stiletto+pumps"],
-      ["hoodie", "bluza z kapturem", "hooded+sweatshirt+hoodie+pocket"],
-      ["long-sleeved/short-sleeved", "z krótkim/długim rękawem (koszula)", "long+sleeved+shirt+vs+short+sleeved"],
-      ["strapless top", "bluzka bez ramiączek", "strapless+tube+top+women"],
-      ["V-neck", "dekolt w szpic", "v+neck+sweater+collar"],
-      ["belt", "pasek", "leather+waist+belt+buckle"],
-      ["button", "guzik", "sewing+round+clothes+button"],
-      ["cap", "czapka z daszkiem", "baseball+cap+visor+hat"],
-      ["earrings", "kolczyki", "gold+diamond+earrings+jewelry"],
-      ["glasses", "okulary", "spectacles+reading+eyeglasses+frames"],
-      ["handbag/bag", "torebka", "leather+designer+handbag+purse"],
-      ["jewellery", "biżuteria", "gold+gemstone+jewelry+collection"],
-      ["necklace", "naszyjnik", "gold+chain+necklace+pendant"],
-      ["ring", "pierścionek", "diamond+gold+engagement+ring"],
-      ["scarf", "szalik", "knitted+winter+warm+scarf+neck"],
-      ["tie (dodatki)", "krawat", "patterned+silk+necktie"],
-      ["bracelet", "bransoletka", "silver+gold+wrist+bracelet"],
-      ["brooch", "broszka", "vintage+gemstone+jewelry+brooch+pin"],
-      ["shoe laces", "sznurówki", "sneakers+tied+shoelaces"],
-      ["slippers", "kapcie", "cozy+indoor+home+slippers"],
-      ["zip-up", "na zamek", "metal+zipper+zip+jacket"],
-      ["checked", "w kratkę", "checked+plaid+gingham+fabric+pattern"],
-      ["cotton", "bawełna", "natural+raw+cotton+plant+boll"],
-      ["gold", "złoto", "pure+gold+ingots+bars+shiny"],
-      ["leather", "skóra, skórzany", "brown+natural+leather+texture"],
-      ["plain (wzór)", "gładki", "plain+monochrome+fabric+texture"],
-      ["silk", "jedwab", "smooth+luxurious+silk+satin+fabric"],
-      ["silver", "srebrny", "shiny+silver+metal+bars"],
-      ["spotted", "w kropki", "polka+dots+spotted+pattern+fabric"],
-      ["striped", "w paski", "black+and+white+striped+pattern+lines"],
-      ["tartan", "w szkocką kratę", "scottish+tartan+kilt+pattern"],
-      ["wool", "wełna", "natural+sheep+wool+knitting+yarn"],
-      ["elastic", "elastyczny", "elastic+band+stretch+fabric"],
-      ["fur", "futro", "fluffy+soft+animal+fur+coat"],
-      ["lacy", "koronkowy", "white+lace+lacy+fabric+pattern"],
-      ["lined", "na podszewce, ocieplany", "fleece+lined+jacket+inside+warm"],
-      ["aggressive", "agresywny", "aggressive+angry+person+shouting"],
-      ["ambitious", "ambitny", "ambitious+goal+climbing+success"],
-      ["bad-tempered", "wybuchowy", "bad+tempered+grumpy+frowning+man"],
-      ["big-headed", "zarozumiały", "arrogant+proud+snob+person"],
-      ["brave", "odważny", "brave+firefighter+saving+courage"],
-      ["careful/careless", "ostrożny/nieostrożny", "careful+walking+balance+caution"],
-      ["caring", "troskliwy", "caring+nurse+comforting+patient"],
-      ["cheerful", "radosny, pogodny", "cheerful+happy+smiling+joyful+face"],
-      ["clever", "mądry", "clever+smart+idea+lightbulb+brain"],
-      ["confident/overconfident", "pewny siebie/zbyt pewny siebie", "confident+business+person+pose"],
-      ["drama queen", "panikarz, osoba nadmiernie dramatyzująca", "drama+queen+hysterical+overreacting"],
-      ["easygoing", "wyluzowany", "easygoing+relaxed+chilling+hammock"],
-      ["energetic", "energiczny", "energetic+jumping+enthusiastic+person"],
-      ["extrovert", "ekstrawertyk", "extrovert+talking+smiling+crowd+party"],
-      ["friendly", "przyjazny", "friendly+smile+warm+greeting"],
-      ["fun-loving", "lubiący dobrą zabawę", "fun+loving+friends+laughing+party"],
-      ["generous", "hojny", "generous+donation+giving+hands"],
-      ["gentle", "łagodny, delikatny", "gentle+hand+holding+butterfly"],
-      ["hard-working", "pracowity", "hard+working+studying+desk+late"],
-      ["helpful/unhelpful", "uczynny/nieskory do pomocy", "helpful+volunteer+helping+elderly"],
-      ["honest/dishonest", "uczciwy/nieuczciwy", "honest+hand+on+heart+promise"],
-      ["imaginative/unimaginative", "pomysłowy, kreatywny/bez wyobraźni", "creative+imagination+artistic+ideas"],
-      ["independent", "niezależny", "independent+person+mountaintop+freedom"],
-      ["intelligent", "inteligentny", "intelligent+mind+chess+brain"],
-      ["introvert", "introwertyk", "introvert+cozy+reading+alone+quiet"],
-      ["lazy", "leniwy", "lazy+couch+potato+sleeping+sofa"],
-      ["mean", "skąpy, złośliwy", "mean+evil+laugh+grumpy"],
-      ["messy", "nieporządny, bałaganiarski", "messy+cluttered+untidy+room"],
-      ["nasty", "wstrętny, paskudny, zły, złośliwy", "nasty+mean+bully+face"],
-      ["nice", "miły", "nice+kind+friendly+smile"],
-      ["open", "otwarty", "open+arms+welcoming+friendly"],
-      ["optimistic/pessimistic", "optymistyczny/pesymistyczny", "glass+half+full+optimistic"],
-      ["outgoing", "towarzyski", "outgoing+social+friends+chatting"],
-      ["patient/impatient", "cierpliwy/niecierpliwy", "patient+waiting+calmly+clock"],
-      ["polite", "uprzejmy", "polite+gentleman+holding+door+bow"],
-      ["quiet", "cichy", "quiet+finger+on+lips+silence"],
-      ["helpless", "bezradny", "helpless+shrugging+confused+person"],
-      ["reliable/unreliable", "solidny, niezawodny/niesolidny, zawodny", "reliable+trustworthy+handshake+deal"],
-      ["responsible", "odpowiedzialny", "responsible+checklist+safety+duty"],
-      ["rude", "niegrzeczny", "rude+impolite+sticking+tongue+out"],
-      ["selfish/unselfish, selfless", "samolubny/bezinteresowny", "selfish+greedy+taking+all+money"],
-      ["serious", "poważny", "serious+focused+stern+face"],
-      ["shy", "nieśmiały", "shy+blushing+girl+timid"],
-      ["silly", "głupi", "silly+funny+goofy+face"],
-      ["sociable/unsociable", "towarzyski/nietowarzyski", "sociable+friends+gathering+talking"],
-      ["talkative", "gadatliwy", "talkative+person+chattering+mouth"],
-      ["tidy/untidy", "schludny, porządny/niechlujny", "clean+tidy+organized+bedroom"],
-      ["bossy", "apodyktyczny", "bossy+pointing+finger+demanding+boss"],
-      ["cowardly", "tchórzliwy", "cowardly+scared+hiding+afraid"],
-      ["eccentric", "ekscentryczny", "eccentric+quirky+colorful+outfit"],
-      ["materialistic", "materialistyczny", "materialistic+luxury+money+shopping+bags"],
-      ["modest", "skromny", "modest+humble+polite+person"],
-      ["moody", "humorzasty", "moody+mood+swings+frown"],
-      ["odd", "dziwny", "odd+unusual+strange+object"],
-      ["oddball", "dziwak", "oddball+weird+quirky+character"],
-      ["sensitive", "wrażliwy", "sensitive+emotional+crying+tear"],
-      ["sincere", "szczery", "sincere+warm+genuine+smile"],
-      ["sympathetic", "współczujący", "sympathetic+comforting+hand+shoulder+empathy"],
-      ["weird", "dziwny", "weird+bizarre+strange+surreal"],
-      ["weirdo", "dziwak", "funny+weirdo+bizarre+face"],
-      ["whizzkid", "cudowne dziecko", "child+prodigy+genius+whizzkid+math"],
-      ["withdrawn", "zamknięty w sobie", "withdrawn+lonely+person+corner+hoodie"],
-      ["angry, cross", "zły, rozgniewany", "furious+angry+red+face+screaming"],
-      ["annoyed", "zirytowany, rozdrażniony", "annoyed+frustrated+rolling+eyes"],
-      ["be in a good mood/bad mood", "być w dobrym/złym humorze", "happy+smile+vs+angry+mood+face"],
-      ["bored", "znudzony", "bored+yawning+student+chin+hand"],
-      ["disappointed", "rozczarowany", "disappointed+sad+person+facepalm"],
-      ["depressed", "załamany", "depressed+sad+person+darkness"],
-      ["embarrassed", "zawstydzony", "embarrassed+blushing+awkward+face"],
-      ["excited", "podekscytowany", "excited+happy+person+cheering"],
-      ["exhausted", "wyczerpany", "exhausted+tired+worker+sleeping+desk"],
-      ["frightened", "przerażony", "frightened+scared+wide+eyes+fear"],
-      ["nervous", "zdenerwowany", "nervous+biting+nails+sweating"],
-      ["pleased", "zadowolony", "pleased+satisfied+smile+thumbs+up"],
-      ["relaxed", "zrelaksowany", "relaxed+lounging+spa+resort"],
-      ["scared", "przestraszony", "scared+hiding+under+blanket"],
-      ["shocked", "zszokowany", "shocked+jaw+drop+open+mouth"],
-      ["stressed", "zestresowany", "stressed+headache+hands+on+head"],
-      ["surprised", "zaskoczony", "surprised+party+gift+happy+face"],
-      ["tired", "zmęczony", "tired+sleepy+eyes+yawning"],
-      ["upset", "przygnębiony, zaniepokojony", "upset+crying+troubled+face"],
-      ["worried", "zmartwiony", "worried+anxious+face+furrowed+brow"],
-      ["amazed", "zdumiony, zdziwiony", "amazed+astonished+wonder+eyes"],
-      ["delighted", "zachwycony", "delighted+laughing+pure+joy+smile"],
-      ["nagging feeling", "dręczące uczucie", "nagging+worry+anxiety+thinking"],
-      ["petrified", "przerażony", "petrified+frozen+fear+eyes"],
-      ["shattered", "zdruzgotany, wykończony", "utterly+exhausted+shattered+tired"],
-      ["stunned", "oniemiały, osłupiały", "stunned+speechless+disbelief+face"],
-      ["worn out", "wycieńczony, wyczerpany", "worn+out+tired+runner+slumped"],
-      ["adore", "uwielbiać", "adoring+cute+puppy+love"],
-      ["be a fan of sb/sth", "być fanem kogoś/czegoś", "stadium+sports+fan+cheering+scarf"],
-      ["be hopeless at", "być beznadziejnym w", "hopeless+fail+mistake+math"],
-      ["be interested in sth", "interesować się czymś", "curious+reading+magnifying+glass"],
-      ["be into sth", "zajmować się czymś, interesować", "passionate+hobby+painting+music"],
-      ["be keen on sth", "interesować się, lubić coś robić", "eager+enthusiastic+raising+hand"],
-      ["be mad about sb/sth", "szaleć za kimś/czymś", "crazy+in+love+hearts+eyes"],
-      ["can't stand", "nie znosić", "disgusted+plugging+nose+dislike"],
-      ["play games/board games", "grać w gry/gry planszowe", "board+game+dice+pawns+family"],
-      ["work out", "trenować, ćwiczyć", "gym+workout+lifting+dumbbells"],
-      ["abortion", "aborcja", "abortion+debate+protest+symbol"],
-      ["charity", "dobroczynność, organizacja charytatywna", "charity+donation+box+volunteers"],
-      ["drug abuse", "zażywanie narkotyków", "drug+abuse+pills+addiction+danger"],
-      ["fair trade", "sprawiedliwy handel", "fair+trade+certified+logo+coffee"],
-      ["homelessness", "bezdomność", "homeless+person+street+cardboard"],
-      ["unemployment", "bezrobocie", "unemployed+looking+for+job+sign"],
-      ["corruption", "korupcja", "political+corruption+bribe+money+handshake"],
-      ["racism", "rasizm", "stop+racism+equality+diversity+hands"],
-      ["death penalty", "kara śmierci", "death+penalty+gavel+courtroom+justice"],
-      ["euthanasia", "eutanazja", "euthanasia+hospital+holding+hand+peace"],
-      ["freedom of speech", "wolność słowa", "freedom+of+speech+megaphone+protest"],
-      ["gambling", "hazard", "casino+gambling+roulette+cards+chips"],
-      ["genetic engineering", "inżynieria genetyczna", "dna+genetic+engineering+crispr"],
-      ["privacy", "prywatność", "cybersecurity+privacy+lock+padlock"],
-      ["brief", "krótki, krótkotrwały", "brief+hourglass+sand+running+time"],
-      ["come across", "natknąć się na", "discovery+finding+treasure+map"],
-      ["complete", "całkowity, kompletny", "puzzle+complete+final+piece"],
-      ["develop into", "rozwinąć się w, stawać się (kimś)", "plant+growing+stages+seedling+flower"],
-      ["eco-freak", "fanatyk ekologii", "eco+activist+recycling+plant+green"],
-      ["fitness maniac", "fanatyk ćwiczeń fizycznych", "intense+fitness+gym+exercise+body"],
-      ["focus on", "skupić się na", "target+bullseye+focus+sharp"],
-      ["grow up", "dorastać", "growing+up+timeline+child+to+adult"],
-      ["have a lot/little in common", "mieć dużo/niewiele wspólnego", "venn+diagram+shared+common+interests"],
-      ["health nut", "osoba mająca obsesję na punkcie zdrowia", "healthy+organic+green+smoothie+diet"],
-      ["huge", "ogromny", "huge+giant+elephant+tiny+mouse"],
-      ["identify", "zidentyfikować", "fingerprint+biometric+identification+scanner"],
-      ["look up to", "podziwiać", "child+admiring+looking+up+to+older+brother"],
-      ["realise", "zdać sobie sprawę", "eureka+lightbulb+moment+realization"],
-      ["recognise", "rozpoznać", "recognizing+friend+waving+hello"],
-      ["remember", "pamiętać", "remembering+photo+album+nostalgia"],
-      ["remind someone to do something", "przypomnieć komuś, by coś zrobił", "sticky+note+reminder+alarm"],
-      ["spend money on", "wydawać pieniądze na", "spending+money+shopping+bags+cash"],
-      ["spot", "dostrzec", "spotting+bird+watching+binoculars"],
-      ["the complete opposite", "całkowite przeciwieństwo", "sun+and+moon+opposites+yin+yang"],
-      ["typical of", "typowy dla", "typical+traditional+british+tea+cup"],
-      ["be part of someone's nature", "leżeć w czyjejś naturze", "human+nature+instinct+dna+empathy"],
-      ["befriend", "zaprzyjaźnić się z", "making+friends+handshake+smiling"],
-      ["bizarre", "dziwaczny", "bizarre+surreal+melting+clocks+art"],
-      ["can't believe your ears", "nie móc uwierzyć własnym uszom", "shocked+listening+hand+to+ear+disbelief"],
-      ["common experience", "częste doznanie", "crowd+shared+moment+concert+unity"],
-      ["find common ground", "znaleźć wspólną płaszczyznę", "two+people+agreement+bridge+harmony"],
-      ["have the time of your life", "doskonale się bawić", "joyful+friends+dancing+party+confetti"],
-      ["place", "rozpoznać, zidentyfikować", "detective+recognizing+face+portrait+thinking"],
-      ["pluck up the courage (to do something)", "zdobyć się na odwagę (aby coś zrobić)", "courage+brave+leap+jumping+cliff"],
-      ["raise questions", "nasuwać pytania", "raising+question+marks+curiosity+debate"],
-      ["scan", "skanować", "document+barcode+scanner+laser"],
-      ["sophisticated", "skomplikowany, zaawansowany", "sophisticated+luxury+watch+mechanism"],
-      ["strike up (a conversation)", "nawiązać (rozmowę)", "strangers+starting+conversation+chatting+bench"]
-    ];
+    // =========================================================================
+    // TWOJE DANE Z JSONBIN.IO ZOSTAŁY WKLEJONE PONIŻEJ:
+    // =========================================================================
+    const JSONBIN_BIN_ID = "6ab9038fac6210605afaaa60";
+    const JSONBIN_API_KEY = "$2a$10$FcnPo/LpHufmKVhRnsJijug1LyxJsqdi7YOfQXxwFMhf76RcMuO2C";
+
+    let cloudDB = { settings: { allowRegistration: true }, users: {} };
+    let syncTimeout = null;
+
+    // Pobieranie bazy z JSONBin
+    async function fetchCloudDB() {
+      try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+          headers: { 'X-Master-Key': JSONBIN_API_KEY }
+        });
+        if (!res.ok) throw new Error("Błąd pobierania");
+        const data = await res.json();
+        cloudDB = data.record || { settings: { allowRegistration: true }, users: {} };
+        if (!cloudDB.users) cloudDB.users = {};
+        if (!cloudDB.settings) cloudDB.settings = { allowRegistration: true };
+
+        document.getElementById('cloudStatusBadge').innerText = "🟢 Połączono ze wspólną bazą JSONBin!";
+        document.getElementById('cloudStatusBadge').style.color = "#55ff55";
+        return cloudDB;
+      } catch (err) {
+        console.error("JSONBin error:", err);
+        document.getElementById('cloudStatusBadge').innerText = "🔴 Błąd połączenia z bazą JSONBin!";
+        return null;
+      }
+    }
+
+    // Zapis do JSONBin
+    async function pushCloudDB() {
+      try {
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_API_KEY
+          },
+          body: JSON.stringify(cloudDB)
+        });
+      } catch (err) {
+        console.error("Błąd zapisu JSONBin:", err);
+      }
+    }
+
+    function queueCloudSave() {
+      clearTimeout(syncTimeout);
+      syncTimeout = setTimeout(() => {
+        pushCloudDB();
+      }, 2000);
+    }
+
+    // KOMPAKTOWA BAZA 296 SŁÓWEK (aby plik ładował się błyskawicznie)
+    const rawPacked = "address|adres|postal+address+envelope;age|wiek|age+birthday+cake+candles;date of birth|data urodzenia|date+of+birth+passport+id;divorced|rozwiedziony|divorced+couple+broken+ring;female|kobieta|female+woman+portrait;first name|imię|first+name+hello+badge+nametag;gender|płeć|gender+symbols+male+female;male|mężczyzna|male+man+portrait+face;marital status|stan cywilny|marital+status+form+checkbox;married|żonaty, zamężna|married+couple+wedding+rings;nationality|narodowość|world+passports+nationalities+flags;occupation|zawód|different+occupations+professions+jobs;single|stanu wolnego|single+person+walking+alone;surname|nazwisko|signature+last+name+surname;widowed|owdowiały|widow+mourning+loss+memory;country of residence|kraj zamieszkania|world+map+globe+country+residence;distinguishing features|znaki szczególne|distinguishing+features+face+scar+mole;ethnic origin|pochodzenie etniczne|diverse+ethnic+faces+cultures;next of kin|najbliższy krewny|family+emergency+contact+support;attractive|atrakcyjny|attractive+beautiful+person+smile;beautiful|piękny|beautiful+woman+face+portrait;fit|sprawny, w dobrej formie|fit+athletic+person+jogging;good-looking|przystojny, ładny|good+looking+person+smile;handsome|przystojny|handsome+man+smiling+face;plain (wygląd)|pospolity, nieatrakcyjny|plain+simple+ordinary+person+face;pretty|ładny|pretty+cute+girl+smiling;ugly|brzydki|ugly+funny+creature+face;cut down on sth|ograniczać (ilość czegoś)|cutting+down+sugar+diet+stop;go for (darker colours)|wybierać, sięgać po (ciemniejsze kolory)|dark+colored+clothes+wardrobe+black;paint your nails|malować paznokcie|painting+nails+red+manicure;put on / lose weight|przybierać / tracić na wadze|weight+loss+gain+scale+tape+measure;straighten|prostować (włosy)|straightening+hair+flat+iron;take up (a hobby/a sport)|zacząć (hobby/uprawiać sport)|starting+new+hobby+tennis+painting;fat|gruby|fat+big+belly+man;muscular|muskularny|muscular+bodybuilder+biceps;obese|otyły|obese+weight+scale+measure;overweight/underweight|z nadwagą/niedowagą|overweight+and+underweight+comparison;plump|pulchny, puszysty|plump+chubby+cheeks+face;skinny|chudy|skinny+thin+arms+ribs;slim|szczupły|slim+slender+waist+fit;well-built|dobrze zbudowany|well+built+athletic+male+physique;lanky|tyczkowaty|lanky+tall+thin+man+legs;stocky|krępy|stocky+short+broad+shoulders+man;bald|łysy|bald+man+head+shaved;blond|blond|blonde+hair+woman+portrait;curly|kręcone|curly+hair+curls+hairstyle;dark|ciemny|dark+black+hair+portrait;dyed|farbowane|dyed+colorful+hair+pink+blue;red|rude|redhead+red+hair+freckles;shoulder-length|do ramion|shoulder+length+bob+hairstyle;straight|proste|straight+long+smooth+hair;wavy|falujące|wavy+beach+waves+hair;auburn|kasztanowe|auburn+hair+color+chestnut;fine/thick|cienkie, rzadkie/gęste|fine+hair+vs+thick+hair+density;fringe|grzywka|hair+bangs+fringe+forehead;have a centre/side parting|mieć przedziałek na środku/z boku|hair+middle+parting+side+parting;braid|warkocz|braided+hair+french+braid;ponytail|kucyk|high+ponytail+hairstyle;receding hairline|włosy rzednące na skroniach|receding+hairline+temples+male;wear your hair loose/up|nosić włosy rozpuszczone/spięte|hair+loose+vs+hair+updo+bun;beard|broda|men+full+beard+barber;freckles|piegi|freckles+cheeks+nose+face;moustache|wąsy|men+mustache+moustache+lip;pale/tanned/dark complexion|blada/opalona/ciemna cera|pale+skin+vs+tanned+skin+complexion;pierced ears|przekłute uszy|pierced+ears+earrings+earlobe;scar|blizna|skin+scar+wound+healing;spotty|pryszczaty|acne+spots+face+pimples;tattoo|tatuaż|arm+tattoo+ink+art;wrinkles|zmarszczki|face+wrinkles+aging+eyes;birthmark|znamię|birthmark+skin+pigmentation;clean-shaven|gładko ogolony|clean+shaven+man+smooth+chin;clear skin|gładka skóra|clear+healthy+glowing+skin+face;double chin|podwójny podbródek|double+chin+neck+face;high cheekbones|wystające kości policzkowe|high+cheekbones+female+model+contour;high forehead|wysokie czoło|high+forehead+face+profile;piercing blue eyes|przenikliwe niebieskie oczy|piercing+vibrant+blue+eyes+close+up;blouse|bluzka|women+elegant+silk+blouse;boots|buty|leather+winter+boots+shoes;bra|biustonosz|women+brassiere+bra+lingerie;casual|codzienny, swobodny|casual+outfit+jeans+tshirt;coat|płaszcz|classic+winter+trench+coat;dress|sukienka|women+elegant+dress+fashion;fashionable/trendy|modny|fashionable+trendy+streetwear+style;fleece|bluza polarowa|warm+fleece+jacket+outdoor;gloves|rękawiczki|winter+wool+gloves+hands;hat|kapelusz|classic+fedora+sun+hat;jacket|kurtka|leather+jacket+stylish+zipper;jeans|dżinsy|classic+blue+denim+jeans;jumper|sweter|knitted+cozy+wool+sweater+jumper;old-fashioned|staromodny, staroświecki|old+fashioned+vintage+retro+clothing;pyjamas|piżama|sleepwear+cozy+pajamas+pyjamas;sandals|sandały|summer+leather+sandals+shoes;shirt|koszula|formal+white+dress+shirt+collar;shoes|buty|classic+leather+dress+shoes;shorts|szorty|casual+summer+shorts+denim;skirt|spódnica|women+pleated+fashion+skirt;smart|elegancki|smart+casual+elegant+business+man;socks|skarpety|cotton+socks+colored+feet;suit|garnitur|men+tailored+business+suit+tie;sweatshirt|bluza sportowa|cotton+crewneck+sweatshirt;tie|krawat|silk+necktie+suit+knot;tracksuit|dres|sport+tracksuit+jacket+sweatpants;trainers|obuwie sportowe|running+sneakers+trainers+shoes;trousers|spodnie|formal+tailored+dress+trousers+pants;underwear|bielizna|cotton+boxer+briefs+underwear;waistcoat|kamizelka|formal+suit+waistcoat+vest;wear|nosić, mieć na sobie|person+wearing+stylish+clothes;ballgown|suknia balowa|magnificent+evening+ballgown+dress;boat-necked|z szerokim dekoltem|boat+neckline+dress+top;cardigan|rozpinany sweter|knitted+button+cardigan+sweater;collar|kołnierzyk|shirt+collar+necktie+formal;cuffs|mankiety|shirt+sleeve+cuffs+cufflinks;dressing gown|szlafrok|plush+bathrobe+dressing+gown;high heels|buty na wysokim obcasie|high+heels+stiletto+pumps;hoodie|bluza z kapturem|hooded+sweatshirt+hoodie+pocket;long-sleeved/short-sleeved|z krótkim/długim rękawem (koszula)|long+sleeved+shirt+vs+short+sleeved;strapless top|bluzka bez ramiączek|strapless+tube+top+women;V-neck|dekolt w szpic|v+neck+sweater+collar;belt|pasek|leather+waist+belt+buckle;button|guzik|sewing+round+clothes+button;cap|czapka z daszkiem|baseball+cap+visor+hat;earrings|kolczyki|gold+diamond+earrings+jewelry;glasses|okulary|spectacles+reading+eyeglasses+frames;handbag/bag|torebka|leather+designer+handbag+purse;jewellery|biżuteria|gold+gemstone+jewelry+collection;necklace|naszyjnik|gold+chain+necklace+pendant;ring|pierścionek|diamond+gold+engagement+ring;scarf|szalik|knitted+winter+warm+scarf+neck;tie (dodatki)|krawat|patterned+silk+necktie;bracelet|bransoletka|silver+gold+wrist+bracelet;brooch|broszka|vintage+gemstone+jewelry+brooch+pin;shoe laces|sznurówki|sneakers+tied+shoelaces;slippers|kapcie|cozy+indoor+home+slippers;zip-up|na zamek|metal+zipper+zip+jacket;checked|w kratkę|checked+plaid+gingham+fabric+pattern;cotton|bawełna|natural+raw+cotton+plant+boll;gold|złoto|pure+gold+ingots+bars+shiny;leather|skóra, skórzany|brown+natural+leather+texture;plain (wzór)|gładki|plain+monochrome+fabric+texture;silk|jedwab|smooth+luxurious+silk+satin+fabric;silver|srebrny|shiny+silver+metal+bars;spotted|w kropki|polka+dots+spotted+pattern+fabric;striped|w paski|black+and+white+striped+pattern+lines;tartan|w szkocką kratę|scottish+tartan+kilt+pattern;wool|wełna|natural+sheep+wool+knitting+yarn;elastic|elastyczny|elastic+band+stretch+fabric;fur|futro|fluffy+soft+animal+fur+coat;lacy|koronkowy|white+lace+lacy+fabric+pattern;lined|na podszewce, ocieplany|fleece+lined+jacket+inside+warm;aggressive|agresywny|aggressive+angry+person+shouting;ambitious|ambitny|ambitious+goal+climbing+success;bad-tempered|wybuchowy|bad+tempered+grumpy+frowning+man;big-headed|zarozumiały|arrogant+proud+snob+person;brave|odważny|brave+firefighter+saving+courage;careful/careless|ostrożny/nieostrożny|careful+walking+balance+caution;caring|troskliwy|caring+nurse+comforting+patient;cheerful|radosny, pogodny|cheerful+happy+smiling+joyful+face;clever|mądry|clever+smart+idea+lightbulb+brain;confident/overconfident|pewny siebie/zbyt pewny siebie|confident+business+person+pose;drama queen|panikarz, osoba nadmiernie dramatyzująca|drama+queen+hysterical+overreacting;easygoing|wyluzowany|easygoing+relaxed+chilling+hammock;energetic|energiczny|energetic+jumping+enthusiastic+person;extrovert|ekstrawertyk|extrovert+talking+smiling+crowd+party;friendly|przyjazny|friendly+smile+warm+greeting;fun-loving|lubiący dobrą zabawę|fun+loving+friends+laughing+party;generous|hojny|generous+donation+giving+hands;gentle|łagodny, delikatny|gentle+hand+holding+butterfly;hard-working|pracowity|hard+working+studying+desk+late;helpful/unhelpful|uczynny/nieskory do pomocy|helpful+volunteer+helping+elderly;honest/dishonest|uczciwy/nieuczciwy|honest+hand+on+heart+promise;imaginative/unimaginative|pomysłowy, kreatywny/bez wyobraźni|creative+imagination+artistic+ideas;independent|niezależny|independent+person+mountaintop+freedom;intelligent|inteligentny|intelligent+mind+chess+brain;introvert|introwertyk|introvert+cozy+reading+alone+quiet;lazy|leniwy|lazy+couch+potato+sleeping+sofa;mean|skąpy, złośliwy|mean+evil+laugh+grumpy;messy|nieporządny, bałaganiarski|messy+cluttered+untidy+room;nasty|wstrętny, paskudny, zły, złośliwy|nasty+mean+bully+face;nice|miły|nice+kind+friendly+smile;open|otwarty|open+arms+welcoming+friendly;optimistic/pessimistic|optymistyczny/pesymistyczny|glass+half+full+optimistic;outgoing|towarzyski|outgoing+social+friends+chatting;patient/impatient|cierpliwy/niecierpliwy|patient+waiting+calmly+clock;polite|uprzejmy|polite+gentleman+holding+door+bow;quiet|cichy|quiet+finger+on+lips+silence;helpless|bezradny|helpless+shrugging+confused+person;reliable/unreliable|solidny, niezawodny/niesolidny, zawodny|reliable+trustworthy+handshake+deal;responsible|odpowiedzialny|responsible+checklist+safety+duty;rude|niegrzeczny|rude+impolite+sticking+tongue+out;selfish/unselfish, selfless|samolubny/bezinteresowny|selfish+greedy+taking+all+money;serious|poważny|serious+focused+stern+face;shy|nieśmiały|shy+blushing+girl+timid;silly|głupi|silly+funny+goofy+face;sociable/unsociable|towarzyski/nietowarzyski|sociable+friends+gathering+talking;talkative|gadatliwy|talkative+person+chattering+mouth;tidy/untidy|schludny, porządny/niechlujny|clean+tidy+organized+bedroom;bossy|apodyktyczny|bossy+pointing+finger+demanding+boss;cowardly|tchórzliwy|cowardly+scared+hiding+afraid;eccentric|ekscentryczny|eccentric+quirky+colorful+outfit;materialistic|materialistyczny|materialistic+luxury+money+shopping+bags;modest|skromny|modest+humble+polite+person;moody|humorzasty|moody+mood+swings+frown;odd|dziwny|odd+unusual+strange+object;oddball|dziwak|oddball+weird+quirky+character;sensitive|wrażliwy|sensitive+emotional+crying+tear;sincere|szczery|sincere+warm+genuine+smile;sympathetic|współczujący|sympathetic+comforting+hand+shoulder+empathy;weird|dziwny|weird+bizarre+strange+surreal;weirdo|dziwak|funny+weirdo+bizarre+face;whizzkid|cudowne dziecko|child+prodigy+genius+whizzkid+math;withdrawn|zamknięty w sobie|withdrawn+lonely+person+corner+hoodie;angry, cross|zły, rozgniewany|furious+angry+red+face+screaming;annoyed|zirytowany, rozdrażniony|annoyed+frustrated+rolling+eyes;be in a good mood/bad mood|być w dobrym/złym humorze|happy+smile+vs+angry+mood+face;bored|znudzony|bored+yawning+student+chin+hand;disappointed|rozczarowany|disappointed+sad+person+facepalm;depressed|załamany|depressed+sad+person+darkness;embarrassed|zawstydzony|embarrassed+blushing+awkward+face;excited|podekscytowany|excited+happy+person+cheering;exhausted|wyczerpany|exhausted+tired+worker+sleeping+desk;frightened|przerażony|frightened+scared+wide+eyes+fear;nervous|zdenerwowany|nervous+biting+nails+sweating;pleased|zadowolony|pleased+satisfied+smile+thumbs+up;relaxed|zrelaksowany|relaxed+lounging+spa+resort;scared|przestraszony|scared+hiding+under+blanket;shocked|zszokowany|shocked+jaw+drop+open+mouth;stressed|zestresowany|stressed+headache+hands+on+head;surprised|zaskoczony|surprised+party+gift+happy+face;tired|zmęczony|tired+sleepy+eyes+yawning;upset|przygnębiony, zaniepokojony|upset+crying+troubled+face;worried|zmartwiony|worried+anxious+face+furrowed+brow;amazed|zdumiony, zdziwiony|amazed+astonished+wonder+eyes;delighted|zachwycony|delighted+laughing+pure+joy+smile;nagging feeling|dręczące uczucie|nagging+worry+anxiety+thinking;petrified|przerażony|petrified+frozen+fear+eyes;shattered|zdruzgotany, wykończony|utterly+exhausted+shattered+tired;stunned|oniemiały, osłupiały|stunned+speechless+disbelief+face;worn out|wycieńczony, wyczerpany|worn+out+tired+runner+slumped;adore|uwielbiać|adoring+cute+puppy+love;be a fan of sb/sth|być fanem kogoś/czegoś|stadium+sports+fan+cheering+scarf;be hopeless at|być beznadziejnym w|hopeless+fail+mistake+math;be interested in sth|interesować się czymś|curious+reading+magnifying+glass;be into sth|zajmować się czymś, interesować|passionate+hobby+painting+music;be keen on sth|interesować się, lubić coś robić|eager+enthusiastic+raising+hand;be mad about sb/sth|szaleć za kimś/czymś|crazy+in+love+hearts+eyes;can't stand|nie znosić|disgusted+plugging+nose+dislike;play games/board games|grać w gry/gry planszowe|board+game+dice+pawns+family;work out|trenować, ćwiczyć|gym+workout+lifting+dumbbells;abortion|aborcja|abortion+debate+protest+symbol;charity|dobroczynność, organizacja charytatywna|charity+donation+box+volunteers;drug abuse|zażywanie narkotyków|drug+abuse+pills+addiction+danger;fair trade|sprawiedliwy handel|fair+trade+certified+logo+coffee;homelessness|bezdomność|homeless+person+street+cardboard;unemployment|bezrobocie|unemployed+looking+for+job+sign;corruption|korupcja|political+corruption+bribe+money+handshake;racism|rasizm|stop+racism+equality+diversity+hands;death penalty|kara śmierci|death+penalty+gavel+courtroom+justice;euthanasia|eutanazja|euthanasia+hospital+holding+hand+peace;freedom of speech|wolność słowa|freedom+of+speech+megaphone+protest;gambling|hazard|casino+gambling+roulette+cards+chips;genetic engineering|inżynieria genetyczna|dna+genetic+engineering+crispr;privacy|prywatność|cybersecurity+privacy+lock+padlock;brief|krótki, krótkotrwały|brief+hourglass+sand+running+time;come across|natknąć się na|discovery+finding+treasure+map;complete|całkowity, kompletny|puzzle+complete+final+piece;develop into|rozwinąć się w, stawać się (kimś)|plant+growing+stages+seedling+flower;eco-freak|fanatyk ekologii|eco+activist+recycling+plant+green;fitness maniac|fanatyk ćwiczeń fizycznych|intense+fitness+gym+exercise+body;focus on|skupić się na|target+bullseye+focus+sharp;grow up|dorastać|growing+up+timeline+child+to+adult;have a lot/little in common|mieć dużo/niewiele wspólnego|venn+diagram+shared+common+interests;health nut|osoba mająca obsesję na punkcie zdrowia|healthy+organic+green+smoothie+diet;huge|ogromny|huge+giant+elephant+tiny+mouse;identify|zidentyfikować|fingerprint+biometric+identification+scanner;look up to|podziwiać|child+admiring+looking+up+to+older+brother;realise|zdać sobie sprawę|eureka+lightbulb+moment+realization;recognise|rozpoznać|recognizing+friend+waving+hello;remember|pamiętać|remembering+photo+album+nostalgia;remind someone to do something|przypomnieć komuś, by coś zrobił|sticky+note+reminder+alarm;spend money on|wydawać pieniądze na|spending+money+shopping+bags+cash;spot|dostrzec|spotting+bird+watching+binoculars;the complete opposite|całkowite przeciwieństwo|sun+and+moon+opposites+yin+yang;typical of|typowy dla|typical+traditional+british+tea+cup;be part of someone's nature|leżeć w czyjejś naturze|human+nature+instinct+dna+empathy;befriend|zaprzyjaźnić się z|making+friends+handshake+smiling;bizarre|dziwaczny|bizarre+surreal+melting+clocks+art;can't believe your ears|nie móc uwierzyć własnym uszom|shocked+listening+hand+to+ear+disbelief;common experience|częste doznanie|crowd+shared+moment+concert+unity;find common ground|znaleźć wspólną płaszczyznę|two+people+agreement+bridge+harmony;have the time of your life|doskonale się bawić|joyful+friends+dancing+party+confetti;place|rozpoznać, zidentyfikować|detective+recognizing+face+portrait+thinking;pluck up the courage (to do something)|zdobyć się na odwagę (aby coś zrobić)|courage+brave+leap+jumping+cliff;raise questions|nasuwać pytania|raising+question+marks+curiosity+debate;scan|skanować|document+barcode+scanner+laser;sophisticated|skomplikowany, zaawansowany|sophisticated+luxury+watch+mechanism;strike up (a conversation)|nawiązać (rozmowę)|strangers+starting+conversation+chatting+bench";
+
+    const rawData = rawPacked.split(';').map(x => x.split('|'));
 
     let currentUser = null;
     let cards = [];
@@ -1188,6 +946,7 @@
     let secretClicks = 0;
     let secretTimer = null;
     let auraTimer = 0;
+    let deferredPrompt = null;
 
     // --- SYNTEZA DŹWIĘKÓW ---
     let audioCtx = null;
@@ -1316,8 +1075,7 @@
       }
 
       particles.push({
-        x: x,
-        y: y,
+        x: x, y: y,
         vx: (Math.random() - 0.5) * 2,
         vy: - (Math.random() * 2 + 1.5),
         size: Math.random() * 6 + 5,
@@ -1383,29 +1141,12 @@
       return "🪵 Początkujący Drwal";
     }
 
-    // Obliczanie nagrody za konkretny poziom (od 5 do 50 szmaragdów)
     function getLevelReward(lvl) {
       if (lvl <= 0) return 5;
       return Math.min(50, Math.round(5 + (lvl - 1) * 1.61));
     }
 
-    // --- BAZA I UŻYTKOWNICY ---
-    function getSettings() {
-      const s = localStorage.getItem('mc_anki_settings');
-      return s ? JSON.parse(s) : { allowRegistration: true };
-    }
-    function saveSettings(s) {
-      localStorage.setItem('mc_anki_settings', JSON.stringify(s));
-    }
-
-    function getUsersDB() {
-      const db = localStorage.getItem('mc_anki_users_db');
-      return db ? JSON.parse(db) : {};
-    }
-    function saveUsersDB(db) {
-      localStorage.setItem('mc_anki_users_db', JSON.stringify(db));
-    }
-
+    // --- PROFIL I STRUKTURA DANYCH ---
     function initUserCards() {
       return rawData.map((item, index) => ({
         id: index,
@@ -1444,38 +1185,51 @@
     }
 
     function getUserData(username) {
-      const db = getUsersDB();
-      let u = db[username];
-      if (!u) return ensureUserData({});
-      u = ensureUserData(u);
-      db[username] = u;
-      saveUsersDB(db);
-      return u;
+      if (!cloudDB.users) cloudDB.users = {};
+      let u = cloudDB.users[username];
+      return ensureUserData(u);
+    }
+
+    function saveUser(username, uData) {
+      if (!cloudDB.users) cloudDB.users = {};
+      cloudDB.users[username] = uData;
+      localStorage.setItem(`mc_local_${username}`, JSON.stringify(uData));
+      queueCloudSave();
     }
 
     // --- LOGOWANIE I REJESTRACJA ---
-    function handleAuth(e) {
+    async function handleAuth(e) {
       e.preventDefault();
       const login = document.getElementById('authLogin').value.trim();
       const pass = document.getElementById('authPass').value.trim();
       if (!login || !pass) return;
 
-      const db = getUsersDB();
-      const settings = getSettings();
+      const submitBtn = document.getElementById('authSubmitBtn');
+      submitBtn.innerText = 'ŁĄCZENIE Z BAZĄ...';
+      submitBtn.disabled = true;
 
-      if (!db[login]) {
-        if (!settings.allowRegistration) {
-          alert('Błędne dane logowania!');
+      await fetchCloudDB();
+
+      submitBtn.innerText = 'GRAJ / WEJDŹ';
+      submitBtn.disabled = false;
+
+      if (!cloudDB.users) cloudDB.users = {};
+      const user = cloudDB.users[login];
+
+      if (!user) {
+        if (cloudDB.settings && cloudDB.settings.allowRegistration === false) {
+          alert('🚫 Rejestracja jest wyłączona przez administratora!');
           return;
         }
-        db[login] = ensureUserData({
+        const newUser = ensureUserData({
           password: pass,
           cards: initUserCards(),
           emeralds: 0
         });
-        saveUsersDB(db);
+        cloudDB.users[login] = newUser;
+        await pushCloudDB();
       } else {
-        if (db[login].password !== pass) {
+        if (user.password !== pass) {
           alert('Błędne hasło dla tego konta!');
           return;
         }
@@ -1498,6 +1252,7 @@
 
     function logout() {
       saveCurrentUserData();
+      pushCloudDB();
       currentUser = null;
       localStorage.removeItem('mc_anki_session_user');
       showScreen('screenAuth');
@@ -1505,11 +1260,9 @@
 
     function saveCurrentUserData() {
       if (!currentUser) return;
-      const db = getUsersDB();
-      if (db[currentUser]) {
-        db[currentUser].cards = cards;
-        saveUsersDB(db);
-      }
+      const u = getUserData(currentUser);
+      u.cards = cards;
+      saveUser(currentUser, u);
     }
 
     function showScreen(screenId) {
@@ -1537,7 +1290,6 @@
       document.getElementById('xpLvlBadge').innerText = `POZIOM XP: ${xpLvl}`;
       document.getElementById('userRankTitle').innerText = rank;
 
-      // Pokaż postęp do następnego poziomu i nagrodę
       if (xpLvl < 29) {
         const curProgressInLevel = cntDone % 10;
         const nextReward = getLevelReward(xpLvl + 1);
@@ -1644,8 +1396,7 @@
       });
     }
 
-    function buyOrEquip(category, itemKey, cost) {
-      const db = getUsersDB();
+    async function buyOrEquip(category, itemKey, cost) {
       const u = getUserData(currentUser);
 
       const listKey = category === 'bg' ? 'backgrounds' : (category === 'pet' ? 'pets' : (category === 'frame' ? 'frames' : 'auras'));
@@ -1663,8 +1414,8 @@
 
       u.emeralds -= cost;
       list.push(itemKey);
-      db[currentUser] = u;
-      saveUsersDB(db);
+      saveUser(currentUser, u);
+      await pushCloudDB();
 
       equipItem(category, itemKey);
       playSound('master');
@@ -1672,7 +1423,6 @@
     }
 
     function equipItem(category, itemKey) {
-      const db = getUsersDB();
       const u = getUserData(currentUser);
 
       if (category === 'bg') u.equipped.background = itemKey;
@@ -1680,8 +1430,7 @@
       if (category === 'frame') u.equipped.frame = itemKey;
       if (category === 'aura') u.equipped.aura = itemKey;
 
-      db[currentUser] = u;
-      saveUsersDB(db);
+      saveUser(currentUser, u);
 
       applyCosmetics();
       updateShopButtons();
@@ -1708,18 +1457,9 @@
         petEl.style.display = 'none';
       } else {
         const petsMap = {
-          wolf: '🐺',
-          cat: '🐱',
-          fox: '🦊',
-          frog: '🐸',
-          axolotl: '🦎',
-          bee: '🐝',
-          panda: '🐼',
-          allay: '🧚',
-          pig: '👑🐷',
-          creeper: '💣',
-          golem: '🦾',
-          dragon: '🐉'
+          wolf: '🐺', cat: '🐱', fox: '🦊', frog: '🐸', axolotl: '🦎',
+          bee: '🐝', panda: '🐼', allay: '🧚', pig: '👑🐷', creeper: '💣',
+          golem: '🦾', dragon: '🐉'
         };
         petEl.innerText = petsMap[eq.pet] || '🐾';
         petEl.style.display = 'block';
@@ -1727,15 +1467,13 @@
     }
 
     function addEmeralds(count) {
-      const db = getUsersDB();
-      if (db[currentUser]) {
-        db[currentUser].emeralds = (db[currentUser].emeralds || 0) + count;
-        saveUsersDB(db);
-        document.getElementById('emeraldCount').innerText = db[currentUser].emeralds;
-      }
+      const u = getUserData(currentUser);
+      u.emeralds = (u.emeralds || 0) + count;
+      saveUser(currentUser, u);
+      document.getElementById('emeraldCount').innerText = u.emeralds;
     }
 
-    // --- OBSŁUGA PRZECIĄGANIA ZWIERZAKA (DRAG & DROP) ---
+    // --- DRAG & DROP ZWIERZAKA ---
     const petEl = document.getElementById('draggablePet');
     let isDragging = false, startX, startY, initLeft, initTop;
 
@@ -1943,18 +1681,15 @@
         showFloatingText('⚡ ZAPAMIĘTANE! +2 🟢', '#55ffff');
       }
 
-      // SPRAWDZENIE AWANSU NA KOLEJNY POZIOM I PRZYZNANIE JEDNORAZOWEJ NAGRODY
       if (isMasteredNow) {
         const doneCount = cards.filter(c => c.status === 'done').length;
         const currentLevel = Math.floor(doneCount / 10);
         const u = getUserData(currentUser);
         
-        if (currentLevel > (u.highestLevelClaimed || 0)) {
+        if (u && currentLevel > (u.highestLevelClaimed || 0)) {
           const reward = getLevelReward(currentLevel);
           u.highestLevelClaimed = currentLevel;
-          const db = getUsersDB();
-          db[currentUser] = u;
-          saveUsersDB(db);
+          saveUser(currentUser, u);
 
           setTimeout(() => {
             playSound('master');
@@ -2003,21 +1738,21 @@
       }
     }
 
-    function resetMyProgress() {
+    async function resetMyProgress() {
       if (confirm('Zresetować Twój postęp do zera? (Emeraldy i przedmioty zostają)')) {
         cards = initUserCards();
         const u = getUserData(currentUser);
-        u.highestLevelClaimed = 0;
-        const db = getUsersDB();
-        db[currentUser] = u;
-        saveUsersDB(db);
-
-        saveCurrentUserData();
+        if (u) {
+          u.highestLevelClaimed = 0;
+          u.cards = cards;
+          saveUser(currentUser, u);
+          await pushCloudDB();
+        }
         showNextCard();
       }
     }
 
-    // --- UKRYTY PANEL ADMINA (HASŁO: dupa123) ---
+    // --- PANEL ADMINA (HASŁO: dupa123) ---
     function handleSecretAdminClick() {
       secretClicks++;
       clearTimeout(secretTimer);
@@ -2042,99 +1777,80 @@
       showScreen(currentUser ? 'screenApp' : 'screenAuth');
     }
 
-    function unlockAdmin() {
+    async function unlockAdmin() {
       const pass = document.getElementById('adminPassInput').value;
-      if (pass === 'dupa123') { // NOWE HASŁO ADMINA
+      if (pass === 'dupa123') {
         document.getElementById('adminAuthBox').style.display = 'none';
         document.getElementById('adminContent').style.display = 'block';
-
-        const settings = getSettings();
-        document.getElementById('regToggle').checked = settings.allowRegistration;
+        
+        await fetchCloudDB();
+        const toggle = document.getElementById('regToggle');
+        if (toggle && cloudDB.settings) {
+          toggle.checked = cloudDB.settings.allowRegistration !== false;
+        }
         renderAdminUserList();
       } else {
         alert('Nieprawidłowe hasło admina!');
       }
     }
 
-    function toggleRegistration(val) {
-      const s = getSettings();
-      s.allowRegistration = val;
-      saveSettings(s);
+    async function toggleRegistration(val) {
+      if (!cloudDB.settings) cloudDB.settings = {};
+      cloudDB.settings.allowRegistration = val;
+      await pushCloudDB();
     }
 
-    function adminCreateUser(e) {
+    async function adminCreateUser(e) {
       e.preventDefault();
       const login = document.getElementById('newAdminUser').value.trim();
       const pass = document.getElementById('newAdminPass').value.trim();
       if (!login || !pass) return;
 
-      const db = getUsersDB();
-      if (db[login]) {
-        alert('Użytkownik o takim nicku już istnieje!');
+      if (cloudDB.users && cloudDB.users[login]) {
+        alert('Użytkownik o takim nicku już istnieje w chmurze!');
         return;
       }
 
-      db[login] = ensureUserData({
+      const newUser = ensureUserData({
         password: pass,
         cards: initUserCards(),
         emeralds: 0
       });
-      saveUsersDB(db);
+      if (!cloudDB.users) cloudDB.users = {};
+      cloudDB.users[login] = newUser;
+      await pushCloudDB();
 
       document.getElementById('newAdminUser').value = '';
       document.getElementById('newAdminPass').value = '';
-      alert(`Pomyślnie utworzono konto dla: ${login}`);
+      alert(`Pomyślnie utworzono konto w bazie dla: ${login}`);
       renderAdminUserList();
     }
 
     const itemNamesMap = {
-      default: "Jaskinia / Zwykła",
-      birch: "Brzozowy Gaj",
-      cherry: "🌸 Kwitnąca Wiśnia",
-      desert: "🏜️ Pustynia",
-      nether: "🌋 Nether",
-      deepdark: "🌌 Mroczne Głębiny",
-      snow: "❄️ Tundra",
-      ocean: "🌊 Ocean",
-      end: "🔮 End",
-      wolf: "🐺 Wilczek",
-      cat: "🐱 Kotek",
-      fox: "🦊 Lisek",
-      frog: "🐸 Żabka",
-      axolotl: "🦎 Aksolotl",
-      bee: "🐝 Pszczółka",
-      panda: "🐼 Panda",
-      allay: "🧚 Allay",
-      pig: "👑 Świnka",
-      creeper: "💣 Creeper",
-      golem: "🦾 Golem",
-      dragon: "🐉 Smok Endu",
-      gold: "🥇 Złota",
-      emerald: "🟢 Szmaragdowa",
-      diamond: "💎 Diamentowa",
-      amethyst: "🔮 Ametystowa",
-      magma: "🔥 Magmowa",
-      netherite: "🌌 Netheritowa",
-      enchanted: "✨ Zaklęty Blask",
-      none: "Brak aury",
-      hearts: "❤️ Serca",
-      runes: "🔮 Runy Zaklęć",
-      flames: "🔥 Płomienie",
+      default: "Jaskinia / Zwykła", birch: "Brzozowy Gaj", cherry: "🌸 Kwitnąca Wiśnia",
+      desert: "🏜️ Pustynia", nether: "🌋 Nether", deepdark: "🌌 Mroczne Głębiny",
+      snow: "❄️ Tundra", ocean: "🌊 Ocean", end: "🔮 End", wolf: "🐺 Wilczek",
+      cat: "🐱 Kotek", fox: "🦊 Lisek", frog: "🐸 Żabka", axolotl: "🦎 Aksolotl",
+      bee: "🐝 Pszczółka", panda: "🐼 Panda", allay: "🧚 Allay", pig: "👑 Świnka",
+      creeper: "💣 Creeper", golem: "🦾 Golem", dragon: "🐉 Smok Endu",
+      gold: "🥇 Złota", emerald: "🟢 Szmaragdowa", diamond: "💎 Diamentowa",
+      amethyst: "🔮 Ametystowa", magma: "🔥 Magmowa", netherite: "🌌 Netheritowa",
+      enchanted: "✨ Zaklęty Blask", none: "Brak aury", hearts: "❤️ Serca",
+      runes: "🔮 Runy Zaklęć", flames: "🔥 Płomienie",
     };
 
     function renderAdminUserList() {
-      const db = getUsersDB();
       const container = document.getElementById('adminUserList');
       container.innerHTML = '';
 
-      const users = Object.keys(db);
+      const users = Object.keys(cloudDB.users || {});
       if (users.length === 0) {
-        container.innerHTML = '<p style="color:#aaa; padding:10px;">Brak zarejestrowanych graczy.</p>';
+        container.innerHTML = '<p style="color:#aaa; padding:10px;">Brak zarejestrowanych graczy w bazie online.</p>';
         return;
       }
 
-      users.forEach(user => {
-        const u = ensureUserData(db[user]);
+      users.forEach(userKey => {
+        const u = ensureUserData(cloudDB.users[userKey]);
         const uCards = u.cards || [];
         const done = uCards.filter(c => c.status === 'done').length;
         const one = uCards.filter(c => c.status === 'learning' && c.streak === 1).length;
@@ -2164,7 +1880,7 @@
         cardDiv.innerHTML = `
           <div class="admin-user-header">
             <div>
-              <span style="font-size:1.35rem; color:#55ffff; font-weight:bold;">${user}</span>
+              <span style="font-size:1.35rem; color:#55ffff; font-weight:bold;">${userKey}</span>
               <span style="color:#ffaa00; font-size:1rem; margin-left:8px;">[ ${rank} ]</span>
             </div>
             <div style="font-size:1.15rem; color:#ffaa00;">
@@ -2187,78 +1903,95 @@
           </div>
 
           <div style="display:flex; gap:6px; margin-top:8px;">
-            <button class="mc-btn" style="padding:2px 8px; font-size:0.85rem;" onclick="adminChangePasswordPrompt('${user}')">🔑 Zmień Hasło</button>
-            <button class="mc-btn mc-btn-green" style="padding:2px 8px; font-size:0.85rem;" onclick="adminAddEmeraldsPrompt('${user}')">🟢 Dodaj Szmaragdy</button>
-            <button class="mc-btn" style="padding:2px 8px; font-size:0.85rem;" onclick="adminResetUser('${user}')">Reset Kart</button>
-            <button class="mc-btn mc-btn-red" style="padding:2px 8px; font-size:0.85rem;" onclick="adminDeleteUser('${user}')">Usuń Konto</button>
+            <button class="mc-btn" style="padding:2px 8px; font-size:0.85rem;" onclick="adminChangePasswordPrompt('${userKey}')">🔑 Zmień Hasło</button>
+            <button class="mc-btn mc-btn-green" style="padding:2px 8px; font-size:0.85rem;" onclick="adminAddEmeraldsPrompt('${userKey}')">🟢 Dodaj Szmaragdy</button>
+            <button class="mc-btn" style="padding:2px 8px; font-size:0.85rem;" onclick="adminResetUser('${userKey}')">Reset Kart</button>
+            <button class="mc-btn mc-btn-red" style="padding:2px 8px; font-size:0.85rem;" onclick="adminDeleteUser('${userKey}')">Usuń Konto</button>
           </div>
         `;
         container.appendChild(cardDiv);
       });
     }
 
-    function adminChangePasswordPrompt(username) {
-      const db = getUsersDB();
-      if (!db[username]) return;
-
-      const newPass = prompt(`Wpisz nowe hasło dla gracza ${username}:`, db[username].password);
+    async function adminChangePasswordPrompt(username) {
+      const u = getUserData(username);
+      const newPass = prompt(`Wpisz nowe hasło dla gracza ${username}:`, u.password);
       if (newPass && newPass.trim() !== '') {
-        db[username].password = newPass.trim();
-        saveUsersDB(db);
-        alert(`Hasło dla gracza ${username} zostało zmienione na: ${newPass.trim()}`);
+        u.password = newPass.trim();
+        cloudDB.users[username] = u;
+        await pushCloudDB();
+        alert(`Hasło dla gracza ${username} zmienione na: ${newPass.trim()}`);
         renderAdminUserList();
       }
     }
 
-    function adminAddEmeraldsPrompt(username) {
-      const db = getUsersDB();
-      if (!db[username]) return;
-
+    async function adminAddEmeraldsPrompt(username) {
+      const u = getUserData(username);
       const amt = prompt(`Ile szmaragdów dodać graczowi ${username}? (np. 50):`, "50");
       const num = parseInt(amt, 10);
       if (!isNaN(num)) {
-        db[username].emeralds = (db[username].emeralds || 0) + num;
-        saveUsersDB(db);
+        u.emeralds = (u.emeralds || 0) + num;
+        cloudDB.users[username] = u;
+        await pushCloudDB();
         if (currentUser === username) {
-          document.getElementById('emeraldCount').innerText = db[username].emeralds;
+          document.getElementById('emeraldCount').innerText = u.emeralds;
         }
         alert(`Dodano ${num} szmaragdów graczowi ${username}!`);
         renderAdminUserList();
       }
     }
 
-    function adminResetUser(username) {
-      if (confirm(`Zresetować postęp kart gracza ${username}? (Zakupione przedmioty zostają)`)) {
-        const db = getUsersDB();
-        if (db[username]) {
-          db[username].cards = initUserCards();
-          db[username].highestLevelClaimed = 0;
-          saveUsersDB(db);
-          if (currentUser === username) cards = db[username].cards;
-          renderAdminUserList();
-        }
+    async function adminResetUser(username) {
+      if (confirm(`Zresetować postęp kart gracza ${username}? (Przedmioty zostają)`)) {
+        const u = getUserData(username);
+        u.cards = initUserCards();
+        u.highestLevelClaimed = 0;
+        cloudDB.users[username] = u;
+        await pushCloudDB();
+        if (currentUser === username) cards = u.cards;
+        renderAdminUserList();
       }
     }
 
-    function adminDeleteUser(username) {
+    async function adminDeleteUser(username) {
       if (confirm(`Czy na pewno trwale USUNĄĆ konto gracza ${username}?`)) {
-        const db = getUsersDB();
-        delete db[username];
-        saveUsersDB(db);
-
-        if (currentUser === username) {
-          logout();
-        } else {
-          renderAdminUserList();
-        }
+        delete cloudDB.users[username];
+        await pushCloudDB();
+        if (currentUser === username) logout();
+        else renderAdminUserList();
       }
     }
 
-    function adminResetAll() {
-      if (confirm('UWAGA: Skasować WSZYSTKICH użytkowników i wyczyścić całą bazę?')) {
-        localStorage.removeItem('mc_anki_users_db');
+    async function adminResetAll() {
+      if (confirm('UWAGA: Skasować WSZYSTKICH użytkowników i wyczyścić całą bazę w chmurze?')) {
+        cloudDB.users = {};
+        await pushCloudDB();
         logout();
       }
+    }
+
+    // PWA
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('pwaInstallBtn');
+      if (installBtn) installBtn.style.display = 'inline-flex';
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choice) => {
+          if (choice.outcome === 'accepted') {
+            document.getElementById('pwaInstallBtn').style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
     document.addEventListener('keydown', (e) => {
@@ -2273,15 +2006,17 @@
     });
 
     // Start
-    window.onload = () => {
+    window.onload = async () => {
       restorePetPosition();
+      await fetchCloudDB();
+
       if (window.location.hash === '#admin') {
         showAdminPrompt();
         return;
       }
+
       const savedUser = localStorage.getItem('mc_anki_session_user');
-      const db = getUsersDB();
-      if (savedUser && db[savedUser]) {
+      if (savedUser && cloudDB.users && cloudDB.users[savedUser]) {
         currentUser = savedUser;
         const uData = getUserData(savedUser);
         cards = uData.cards;
