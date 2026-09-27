@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -25,7 +26,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'VT323', monospace; }
 
-    /* TŁA MINECRAFTA (Biomy) */
+    /* TŁA MINECRAFTA */
     body {
       background-color: #121212;
       background: linear-gradient(rgba(10, 10, 15, 0.72), rgba(10, 10, 15, 0.82)), 
@@ -72,6 +73,76 @@
     body.theme-end {
       background: linear-gradient(rgba(20, 10, 30, 0.72), rgba(20, 10, 30, 0.82)), 
                   url('https://tse1.mm.bing.net/th?q=minecraft+the+end+dimension+obsidian+pillars+wallpaper+hd&w=1920&h=1080&c=7&rs=1&p=0') center center / cover no-repeat fixed;
+    }
+
+    /* TRYB DYSKOTEKI */
+    body.disco-active {
+      animation: discoScreen 1.5s infinite linear alternate;
+    }
+    @keyframes discoScreen {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    .disco-ball-banner {
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.85);
+      border: 3px solid #ff00ff;
+      box-shadow: 0 0 20px #ff00ff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      color: #ffff55;
+      font-size: 1.3rem;
+      font-weight: bold;
+      z-index: 1800;
+      animation: pulseGlow 1s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { transform: translateX(-50%) scale(0.95); box-shadow: 0 0 10px #00ffff; border-color:#00ffff; }
+      100% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 25px #ff00ff; border-color:#ff00ff; }
+    }
+
+    /* OGŁOSZENIE OD ADMINA W STYLU ROBLOX */
+    .roblox-broadcast-bar {
+      position: fixed;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 600px;
+      background: rgba(18, 18, 22, 0.95);
+      border: 3px solid #ffd700;
+      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
+      padding: 12px 18px;
+      border-radius: 8px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: top 0.45s cubic-bezier(0.17, 0.89, 0.32, 1.25);
+    }
+    .roblox-broadcast-bar.show {
+      top: 15px;
+    }
+    .roblox-title {
+      color: #ffd700;
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .roblox-msg {
+      color: #ffffff;
+      font-size: 1.45rem;
+      margin-top: 4px;
+      text-shadow: 2px 2px #000;
+      word-break: break-word;
     }
 
     #fxCanvas {
@@ -139,6 +210,7 @@
     .mc-btn-red { background: #a82b2b; box-shadow: inset -3px -3px #541414, inset 3px 3px #e05e5e; }
     .mc-btn-green { background: #2ea82e; box-shadow: inset -3px -3px #145414, inset 3px 3px #5ee05e; }
     .mc-btn-gold { background: #b8860b; box-shadow: inset -3px -3px #6b4e04, inset 3px 3px #ffd700; color:#fff; }
+    .mc-btn-purple { background: #7c2d12; box-shadow: inset -3px -3px #451a03, inset 3px 3px #ea580c; }
     .mc-btn-sub { font-size: 0.85rem; opacity: 0.9; }
 
     .screen { width: 100%; max-width: 480px; display: none; }
@@ -434,6 +506,15 @@
 <body>
 
   <canvas id="fxCanvas"></canvas>
+
+  <!-- PŁYWAJĄCY BANER DYSKOTEKI -->
+  <div id="discoBanner" class="disco-ball-banner">🪩 TRYB DYSKOTEKI AKTYWNY! 🪩</div>
+
+  <!-- ROBLOX-STYLE BANER OGŁOSZENIA OD ADMINA -->
+  <div id="robloxBroadcast" class="roblox-broadcast-bar">
+    <div class="roblox-title">📢 [OGŁOSZENIE OD ADMINA]</div>
+    <div class="roblox-msg" id="robloxMsgText">Wiadomość testowa...</div>
+  </div>
 
   <div id="draggablePet" class="draggable-pet" title="Złap i przeciągnij mnie po ekranie!">🐺</div>
 
@@ -834,6 +915,26 @@
       </div>
 
       <div id="adminContent" style="display:none;">
+        
+        <!-- WIADOMOŚĆ DO WSZYSTKICH (ROBLOX STYLE) -->
+        <div style="background:#1b2234; border:3px solid #ffd700; padding:12px; color:#fff; margin-bottom:12px;">
+          <h3 style="font-size:1.3rem; color:#ffd700; margin-bottom:6px;">📢 WYŚLIJ OGŁOSZENIE DO WSZYSTKICH (STYL ROBLOX)</h3>
+          <p style="font-size:0.95rem; color:#ccc; margin-bottom:8px;">Wiadomość zjedzie u każdego gracza z góry ekranu na 6 sekund!</p>
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="adminBroadcastInput" class="auth-input" placeholder="Wpisz treść wiadomości dla graczy..." style="font-size:1.1rem; flex:1;">
+            <button class="mc-btn mc-btn-gold" onclick="adminSendBroadcast()" style="padding:4px 12px; font-size:1.1rem;">WYŚLIJ 🚀</button>
+          </div>
+        </div>
+
+        <!-- TRYB DYSKOTEKI -->
+        <div style="background:#2d1238; border:3px solid #ff00ff; padding:12px; color:#fff; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 style="font-size:1.3rem; color:#ff77ff; margin-bottom:2px;">🪩 TRYB DYSKOTEKI DLA WSZYSTKICH</h3>
+            <p style="font-size:0.95rem; color:#ddd;">Światła RGB i 8-bitowy bit techno na żywo!</p>
+          </div>
+          <button class="mc-btn" id="btnAdminDiscoToggle" onclick="adminToggleDisco()" style="padding:8px 16px; font-size:1.2rem;">WŁĄCZ DYSKOTEKĘ 🪩</button>
+        </div>
+
         <div style="background:#222; border:2px solid #000; padding:10px; color:#fff; margin-bottom:12px;">
           <h3 style="font-size:1.2rem; color:#55ffff; margin-bottom:6px;">USTAWIENIA REJESTRACJI</h3>
           <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:1.15rem;">
@@ -866,16 +967,17 @@
   </footer>
 
   <script>
-    // =========================================================================
-    // TWOJE DANE Z JSONBIN.IO (Wklejone na stałe):
-    // =========================================================================
+    // TWOJE DANE Z JSONBIN.IO:
     const JSONBIN_BIN_ID = "6ab9038fac6210605afaaa60";
     const JSONBIN_API_KEY = "$2a$10$FcnPo/LpHufmKVhRnsJijug1LyxJsqdi7YOfQXxwFMhf76RcMuO2C";
 
-    let cloudDB = { settings: { allowRegistration: true }, users: {} };
+    let cloudDB = { settings: { allowRegistration: true, discoMode: false }, broadcast: { id: 0, msg: '', time: 0 }, users: {} };
     let syncTimeout = null;
+    let lastSeenBroadcastId = 0;
+    let isDiscoRunning = false;
+    let discoInterval = null;
+    let discoStep = 0;
 
-    // Pobieranie bazy z JSONBin
     async function fetchCloudDB() {
       try {
         const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
@@ -883,9 +985,12 @@
         });
         if (!res.ok) throw new Error("Błąd pobierania");
         const data = await res.json();
-        cloudDB = data.record || { settings: { allowRegistration: true }, users: {} };
+        cloudDB = data.record || {};
         if (!cloudDB.users) cloudDB.users = {};
-        if (!cloudDB.settings) cloudDB.settings = { allowRegistration: true };
+        if (!cloudDB.settings) cloudDB.settings = { allowRegistration: true, discoMode: false };
+        if (!cloudDB.broadcast) cloudDB.broadcast = { id: 0, msg: '', time: 0 };
+
+        checkLiveEvents();
         return cloudDB;
       } catch (err) {
         console.error("JSONBin error:", err);
@@ -893,7 +998,6 @@
       }
     }
 
-    // Zapis do JSONBin
     async function pushCloudDB() {
       try {
         await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
@@ -916,7 +1020,126 @@
       }, 2000);
     }
 
-    // KOMPAKTOWA BAZA 296 SŁÓWEK
+    // SPRAWDZANIE OGŁOSZEŃ I DYSKOTEKI
+    function checkLiveEvents() {
+      // 1. Ogłoszenie jak w Robloxie
+      if (cloudDB.broadcast && cloudDB.broadcast.id && cloudDB.broadcast.id !== lastSeenBroadcastId) {
+        // Jeśli ogłoszenie ma mniej niż 45 sekund
+        if (Date.now() - cloudDB.broadcast.time < 45000) {
+          lastSeenBroadcastId = cloudDB.broadcast.id;
+          triggerRobloxBroadcast(cloudDB.broadcast.msg);
+        }
+      }
+
+      // 2. Tryb Dyskoteki
+      const discoState = cloudDB.settings && cloudDB.settings.discoMode === true;
+      if (discoState !== isDiscoRunning) {
+        setDiscoMode(discoState);
+      }
+    }
+
+    function triggerRobloxBroadcast(msg) {
+      const banner = document.getElementById('robloxBroadcast');
+      const text = document.getElementById('robloxMsgText');
+      text.innerText = msg;
+      banner.classList.add('show');
+      playSound('master');
+
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 6500);
+    }
+
+    function setDiscoMode(active) {
+      isDiscoRunning = active;
+      const banner = document.getElementById('discoBanner');
+      const btn = document.getElementById('btnAdminDiscoToggle');
+
+      if (active) {
+        document.body.classList.add('disco-active');
+        banner.style.display = 'block';
+        if (btn) {
+          btn.innerText = 'WYŁĄCZ DYSKOTEKĘ 🛑';
+          btn.className = 'mc-btn mc-btn-red';
+        }
+        startDiscoBeat();
+      } else {
+        document.body.classList.remove('disco-active');
+        banner.style.display = 'none';
+        if (btn) {
+          btn.innerText = 'WŁĄCZ DYSKOTEKĘ 🪩';
+          btn.className = 'mc-btn mc-btn-purple';
+        }
+        stopDiscoBeat();
+      }
+    }
+
+    // 8-BITOWY RETRO BIT TECHNO W WEB AUDIO API
+    function startDiscoBeat() {
+      if (discoInterval) return;
+      initAudio();
+      discoStep = 0;
+
+      discoInterval = setInterval(() => {
+        if (!audioCtx || !masterGain || volumeLevel === 0) return;
+        const now = audioCtx.currentTime;
+
+        // Stopa (Kick drum na każdy beat)
+        if (discoStep % 4 === 0) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(masterGain);
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.exponentialRampToValueAtTime(35, now + 0.11);
+          gain.gain.setValueAtTime(0.5, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.11);
+          osc.start(now);
+          osc.stop(now + 0.11);
+        }
+
+        // Talerz (Hi-hat)
+        if (discoStep % 2 === 1) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.connect(gain);
+          gain.connect(masterGain);
+          osc.frequency.setValueAtTime(9000, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        }
+
+        // Bassline Synth Groove
+        if (discoStep % 2 === 0) {
+          const bassNotes = [110, 110, 130, 146, 110, 110, 164, 146];
+          const note = bassNotes[(Math.floor(discoStep / 2)) % bassNotes.length];
+          const bOsc = audioCtx.createOscillator();
+          const bGain = audioCtx.createGain();
+          bOsc.type = 'sawtooth';
+          bOsc.connect(bGain);
+          bGain.connect(masterGain);
+          bOsc.frequency.setValueAtTime(note, now);
+          bGain.gain.setValueAtTime(0.25, now);
+          bGain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+          bOsc.start(now);
+          bOsc.stop(now + 0.09);
+        }
+
+        discoStep++;
+      }, 130);
+    }
+
+    function stopDiscoBeat() {
+      if (discoInterval) {
+        clearInterval(discoInterval);
+        discoInterval = null;
+      }
+    }
+
+    // BAZA 296 SŁÓWEK
     const rawPacked = "address|adres|postal+address+envelope;age|wiek|age+birthday+cake+candles;date of birth|data urodzenia|date+of+birth+passport+id;divorced|rozwiedziony|divorced+couple+broken+ring;female|kobieta|female+woman+portrait;first name|imię|first+name+hello+badge+nametag;gender|płeć|gender+symbols+male+female;male|mężczyzna|male+man+portrait+face;marital status|stan cywilny|marital+status+form+checkbox;married|żonaty, zamężna|married+couple+wedding+rings;nationality|narodowość|world+passports+nationalities+flags;occupation|zawód|different+occupations+professions+jobs;single|stanu wolnego|single+person+walking+alone;surname|nazwisko|signature+last+name+surname;widowed|owdowiały|widow+mourning+loss+memory;country of residence|kraj zamieszkania|world+map+globe+country+residence;distinguishing features|znaki szczególne|distinguishing+features+face+scar+mole;ethnic origin|pochodzenie etniczne|diverse+ethnic+faces+cultures;next of kin|najbliższy krewny|family+emergency+contact+support;attractive|atrakcyjny|attractive+beautiful+person+smile;beautiful|piękny|beautiful+woman+face+portrait;fit|sprawny, w dobrej formie|fit+athletic+person+jogging;good-looking|przystojny, ładny|good+looking+person+smile;handsome|przystojny|handsome+man+smiling+face;plain (wygląd)|pospolity, nieatrakcyjny|plain+simple+ordinary+person+face;pretty|ładny|pretty+cute+girl+smiling;ugly|brzydki|ugly+funny+creature+face;cut down on sth|ograniczać (ilość czegoś)|cutting+down+sugar+diet+stop;go for (darker colours)|wybierać, sięgać po (ciemniejsze kolory)|dark+colored+clothes+wardrobe+black;paint your nails|malować paznokcie|painting+nails+red+manicure;put on / lose weight|przybierać / tracić na wadze|weight+loss+gain+scale+tape+measure;straighten|prostować (włosy)|straightening+hair+flat+iron;take up (a hobby/a sport)|zacząć (hobby/uprawiać sport)|starting+new+hobby+tennis+painting;fat|gruby|fat+big+belly+man;muscular|muskularny|muscular+bodybuilder+biceps;obese|otyły|obese+weight+scale+measure;overweight/underweight|z nadwagą/niedowagą|overweight+and+underweight+comparison;plump|pulchny, puszysty|plump+chubby+cheeks+face;skinny|chudy|skinny+thin+arms+ribs;slim|szczupły|slim+slender+waist+fit;well-built|dobrze zbudowany|well+built+athletic+male+physique;lanky|tyczkowaty|lanky+tall+thin+man+legs;stocky|krępy|stocky+short+broad+shoulders+man;bald|łysy|bald+man+head+shaved;blond|blond|blonde+hair+woman+portrait;curly|kręcone|curly+hair+curls+hairstyle;dark|ciemny|dark+black+hair+portrait;dyed|farbowane|dyed+colorful+hair+pink+blue;red|rude|redhead+red+hair+freckles;shoulder-length|do ramion|shoulder+length+bob+hairstyle;straight|proste|straight+long+smooth+hair;wavy|falujące|wavy+beach+waves+hair;auburn|kasztanowe|auburn+hair+color+chestnut;fine/thick|cienkie, rzadkie/gęste|fine+hair+vs+thick+hair+density;fringe|grzywka|hair+bangs+fringe+forehead;have a centre/side parting|mieć przedziałek na środku/z boku|hair+middle+parting+side+parting;braid|warkocz|braided+hair+french+braid;ponytail|kucyk|high+ponytail+hairstyle;receding hairline|włosy rzednące na skroniach|receding+hairline+temples+male;wear your hair loose/up|nosić włosy rozpuszczone/spięte|hair+loose+vs+hair+updo+bun;beard|broda|men+full+beard+barber;freckles|piegi|freckles+cheeks+nose+face;moustache|wąsy|men+mustache+moustache+lip;pale/tanned/dark complexion|blada/opalona/ciemna cera|pale+skin+vs+tanned+skin+complexion;pierced ears|przekłute uszy|pierced+ears+earrings+earlobe;scar|blizna|skin+scar+wound+healing;spotty|pryszczaty|acne+spots+face+pimples;tattoo|tatuaż|arm+tattoo+ink+art;wrinkles|zmarszczki|face+wrinkles+aging+eyes;birthmark|znamię|birthmark+skin+pigmentation;clean-shaven|gładko ogolony|clean+shaven+man+smooth+chin;clear skin|gładka skóra|clear+healthy+glowing+skin+face;double chin|podwójny podbródek|double+chin+neck+face;high cheekbones|wystające kości policzkowe|high+cheekbones+female+model+contour;high forehead|wysokie czoło|high+forehead+face+profile;piercing blue eyes|przenikliwe niebieskie oczy|piercing+vibrant+blue+eyes+close+up;blouse|bluzka|women+elegant+silk+blouse;boots|buty|leather+winter+boots+shoes;bra|biustonosz|women+brassiere+bra+lingerie;casual|codzienny, swobodny|casual+outfit+jeans+tshirt;coat|płaszcz|classic+winter+trench+coat;dress|sukienka|women+elegant+dress+fashion;fashionable/trendy|modny|fashionable+trendy+streetwear+style;fleece|bluza polarowa|warm+fleece+jacket+outdoor;gloves|rękawiczki|winter+wool+gloves+hands;hat|kapelusz|classic+fedora+sun+hat;jacket|kurtka|leather+jacket+stylish+zipper;jeans|dżinsy|classic+blue+denim+jeans;jumper|sweter|knitted+cozy+wool+sweater+jumper;old-fashioned|staromodny, staroświecki|old+fashioned+vintage+retro+clothing;pyjamas|piżama|sleepwear+cozy+pajamas+pyjamas;sandals|sandały|summer+leather+sandals+shoes;shirt|koszula|formal+white+dress+shirt+collar;shoes|buty|classic+leather+dress+shoes;shorts|szorty|casual+summer+shorts+denim;skirt|spódnica|women+pleated+fashion+skirt;smart|elegancki|smart+casual+elegant+business+man;socks|skarpety|cotton+socks+colored+feet;suit|garnitur|men+tailored+business+suit+tie;sweatshirt|bluza sportowa|cotton+crewneck+sweatshirt;tie|krawat|silk+necktie+suit+knot;tracksuit|dres|sport+tracksuit+jacket+sweatpants;trainers|obuwie sportowe|running+sneakers+trainers+shoes;trousers|spodnie|formal+tailored+dress+trousers+pants;underwear|bielizna|cotton+boxer+briefs+underwear;waistcoat|kamizelka|formal+suit+waistcoat+vest;wear|nosić, mieć na sobie|person+wearing+stylish+clothes;ballgown|suknia balowa|magnificent+evening+ballgown+dress;boat-necked|z szerokim dekoltem|boat+neckline+dress+top;cardigan|rozpinany sweter|knitted+button+cardigan+sweater;collar|kołnierzyk|shirt+collar+necktie+formal;cuffs|mankiety|shirt+sleeve+cuffs+cufflinks;dressing gown|szlafrok|plush+bathrobe+dressing+gown;high heels|buty na wysokim obcasie|high+heels+stiletto+pumps;hoodie|bluza z kapturem|hooded+sweatshirt+hoodie+pocket;long-sleeved/short-sleeved|z krótkim/długim rękawem (koszula)|long+sleeved+shirt+vs+short+sleeved;strapless top|bluzka bez ramiączek|strapless+tube+top+women;V-neck|dekolt w szpic|v+neck+sweater+collar;belt|pasek|leather+waist+belt+buckle;button|guzik|sewing+round+clothes+button;cap|czapka z daszkiem|baseball+cap+visor+hat;earrings|kolczyki|gold+diamond+earrings+jewelry;glasses|okulary|spectacles+reading+eyeglasses+frames;handbag/bag|torebka|leather+designer+handbag+purse;jewellery|biżuteria|gold+gemstone+jewelry+collection;necklace|naszyjnik|gold+chain+necklace+pendant;ring|pierścionek|diamond+gold+engagement+ring;scarf|szalik|knitted+winter+warm+scarf+neck;tie (dodatki)|krawat|patterned+silk+necktie;bracelet|bransoletka|silver+gold+wrist+bracelet;brooch|broszka|vintage+gemstone+jewelry+brooch+pin;shoe laces|sznurówki|sneakers+tied+shoelaces;slippers|kapcie|cozy+indoor+home+slippers;zip-up|na zamek|metal+zipper+zip+jacket;checked|w kratkę|checked+plaid+gingham+fabric+pattern;cotton|bawełna|natural+raw+cotton+plant+boll;gold|złoto|pure+gold+ingots+bars+shiny;leather|skóra, skórzany|brown+natural+leather+texture;plain (wzór)|gładki|plain+monochrome+fabric+texture;silk|jedwab|smooth+luxurious+silk+satin+fabric;silver|srebrny|shiny+silver+metal+bars;spotted|w kropki|polka+dots+spotted+pattern+fabric;striped|w paski|black+and+white+striped+pattern+lines;tartan|w szkocką kratę|scottish+tartan+kilt+pattern;wool|wełna|natural+sheep+wool+knitting+yarn;elastic|elastyczny|elastic+band+stretch+fabric;fur|futro|fluffy+soft+animal+fur+coat;lacy|koronkowy|white+lace+lacy+fabric+pattern;lined|na podszewce, ocieplany|fleece+lined+jacket+inside+warm;aggressive|agresywny|aggressive+angry+person+shouting;ambitious|ambitny|ambitious+goal+climbing+success;bad-tempered|wybuchowy|bad+tempered+grumpy+frowning+man;big-headed|zarozumiały|arrogant+proud+snob+person;brave|odważny|brave+firefighter+saving+courage;careful/careless|ostrożny/nieostrożny|careful+walking+balance+caution;caring|troskliwy|caring+nurse+comforting+patient;cheerful|radosny, pogodny|cheerful+happy+smiling+joyful+face;clever|mądry|clever+smart+idea+lightbulb+brain;confident/overconfident|pewny siebie/zbyt pewny siebie|confident+business+person+pose;drama queen|panikarz, osoba nadmiernie dramatyzująca|drama+queen+hysterical+overreacting;easygoing|wyluzowany|easygoing+relaxed+chilling+hammock;energetic|energiczny|energetic+jumping+enthusiastic+person;extrovert|ekstrawertyk|extrovert+talking+smiling+crowd+party;friendly|przyjazny|friendly+smile+warm+greeting;fun-loving|lubiący dobrą zabawę|fun+loving+friends+laughing+party;generous|hojny|generous+donation+giving+hands;gentle|łagodny, delikatny|gentle+hand+holding+butterfly;hard-working|pracowity|hard+working+studying+desk+late;helpful/unhelpful|uczynny/nieskory do pomocy|helpful+volunteer+helping+elderly;honest/dishonest|uczciwy/nieuczciwy|honest+hand+on+heart+promise;imaginative/unimaginative|pomysłowy, kreatywny/bez wyobraźni|creative+imagination+artistic+ideas;independent|niezależny|independent+person+mountaintop+freedom;intelligent|inteligentny|intelligent+mind+chess+brain;introvert|introwertyk|introvert+cozy+reading+alone+quiet;lazy|leniwy|lazy+couch+potato+sleeping+sofa;mean|skąpy, złośliwy|mean+evil+laugh+grumpy;messy|nieporządny, bałaganiarski|messy+cluttered+untidy+room;nasty|wstrętny, paskudny, zły, złośliwy|nasty+mean+bully+face;nice|miły|nice+kind+friendly+smile;open|otwarty|open+arms+welcoming+friendly;optimistic/pessimistic|optymistyczny/pesymistyczny|glass+half+full+optimistic;outgoing|towarzyski|outgoing+social+friends+chatting;patient/impatient|cierpliwy/niecierpliwy|patient+waiting+calmly+clock;polite|uprzejmy|polite+gentleman+holding+door+bow;quiet|cichy|quiet+finger+on+lips+silence;helpless|bezradny|helpless+shrugging+confused+person;reliable/unreliable|solidny, niezawodny/niesolidny, zawodny|reliable+trustworthy+handshake+deal;responsible|odpowiedzialny|responsible+checklist+safety+duty;rude|niegrzeczny|rude+impolite+sticking+tongue+out;selfish/unselfish, selfless|samolubny/bezinteresowny|selfish+greedy+taking+all+money;serious|poważny|serious+focused+stern+face;shy|nieśmiały|shy+blushing+girl+timid;silly|głupi|silly+funny+goofy+face;sociable/unsociable|towarzyski/nietowarzyski|sociable+friends+gathering+talking;talkative|gadatliwy|talkative+person+chattering+mouth;tidy/untidy|schludny, porządny/niechlujny|clean+tidy+organized+bedroom;bossy|apodyktyczny|bossy+pointing+finger+demanding+boss;cowardly|tchórzliwy|cowardly+scared+hiding+afraid;eccentric|ekscentryczny|eccentric+quirky+colorful+outfit;materialistic|materialistyczny|materialistic+luxury+money+shopping+bags;modest|skromny|modest+humble+polite+person;moody|humorzasty|moody+mood+swings+frown;odd|dziwny|odd+unusual+strange+object;oddball|dziwak|oddball+weird+quirky+character;sensitive|wrażliwy|sensitive+emotional+crying+tear;sincere|szczery|sincere+warm+genuine+smile;sympathetic|współczujący|sympathetic+comforting+hand+shoulder+empathy;weird|dziwny|weird+bizarre+strange+surreal;weirdo|dziwak|funny+weirdo+bizarre+face;whizzkid|cudowne dziecko|child+prodigy+genius+whizzkid+math;withdrawn|zamknięty w sobie|withdrawn+lonely+person+corner+hoodie;angry, cross|zły, rozgniewany|furious+angry+red+face+screaming;annoyed|zirytowany, rozdrażniony|annoyed+frustrated+rolling+eyes;be in a good mood/bad mood|być w dobrym/złym humorze|happy+smile+vs+angry+mood+face;bored|znudzony|bored+yawning+student+chin+hand;disappointed|rozczarowany|disappointed+sad+person+facepalm;depressed|załamany|depressed+sad+person+darkness;embarrassed|zawstydzony|embarrassed+blushing+awkward+face;excited|podekscytowany|excited+happy+person+cheering;exhausted|wyczerpany|exhausted+tired+worker+sleeping+desk;frightened|przerażony|frightened+scared+wide+eyes+fear;nervous|zdenerwowany|nervous+biting+nails+sweating;pleased|zadowolony|pleased+satisfied+smile+thumbs+up;relaxed|zrelaksowany|relaxed+lounging+spa+resort;scared|przestraszony|scared+hiding+under+blanket;shocked|zszokowany|shocked+jaw+drop+open+mouth;stressed|zestresowany|stressed+headache+hands+on+head;surprised|zaskoczony|surprised+party+gift+happy+face;tired|zmęczony|tired+sleepy+eyes+yawning;upset|przygnębiony, zaniepokojony|upset+crying+troubled+face;worried|zmartwiony|worried+anxious+face+furrowed+brow;amazed|zdumiony, zdziwiony|amazed+astonished+wonder+eyes;delighted|zachwycony|delighted+laughing+pure+joy+smile;nagging feeling|dręczące uczucie|nagging+worry+anxiety+thinking;petrified|przerażony|petrified+frozen+fear+eyes;shattered|zdruzgotany, wykończony|utterly+exhausted+shattered+tired;stunned|oniemiały, osłupiały|stunned+speechless+disbelief+face;worn out|wycieńczony, wyczerpany|worn+out+tired+runner+slumped;adore|uwielbiać|adoring+cute+puppy+love;be a fan of sb/sth|być fanem kogoś/czegoś|stadium+sports+fan+cheering+scarf;be hopeless at|być beznadziejnym w|hopeless+fail+mistake+math;be interested in sth|interesować się czymś|curious+reading+magnifying+glass;be into sth|zajmować się czymś, interesować|passionate+hobby+painting+music;be keen on sth|interesować się, lubić coś robić|eager+enthusiastic+raising+hand;be mad about sb/sth|szaleć za kimś/czymś|crazy+in+love+hearts+eyes;can't stand|nie znosić|disgusted+plugging+nose+dislike;play games/board games|grać w gry/gry planszowe|board+game+dice+pawns+family;work out|trenować, ćwiczyć|gym+workout+lifting+dumbbells;abortion|aborcja|abortion+debate+protest+symbol;charity|dobroczynność, organizacja charytatywna|charity+donation+box+volunteers;drug abuse|zażywanie narkotyków|drug+abuse+pills+addiction+danger;fair trade|sprawiedliwy handel|fair+trade+certified+logo+coffee;homelessness|bezdomność|homeless+person+street+cardboard;unemployment|bezrobocie|unemployed+looking+for+job+sign;corruption|korupcja|political+corruption+bribe+money+handshake;racism|rasizm|stop+racism+equality+diversity+hands;death penalty|kara śmierci|death+penalty+gavel+courtroom+justice;euthanasia|eutanazja|euthanasia+hospital+holding+hand+peace;freedom of speech|wolność słowa|freedom+of+speech+megaphone+protest;gambling|hazard|casino+gambling+roulette+cards+chips;genetic engineering|inżynieria genetyczna|dna+genetic+engineering+crispr;privacy|prywatność|cybersecurity+privacy+lock+padlock;brief|krótki, krótkotrwały|brief+hourglass+sand+running+time;come across|natknąć się na|discovery+finding+treasure+map;complete|całkowity, kompletny|puzzle+complete+final+piece;develop into|rozwinąć się w, stawać się (kimś)|plant+growing+stages+seedling+flower;eco-freak|fanatyk ekologii|eco+activist+recycling+plant+green;fitness maniac|fanatyk ćwiczeń fizycznych|intense+fitness+gym+exercise+body;focus on|skupić się na|target+bullseye+focus+sharp;grow up|dorastać|growing+up+timeline+child+to+adult;have a lot/little in common|mieć dużo/niewiele wspólnego|venn+diagram+shared+common+interests;health nut|osoba mająca obsesję na punkcie zdrowia|healthy+organic+green+smoothie+diet;huge|ogromny|huge+giant+elephant+tiny+mouse;identify|zidentyfikować|fingerprint+biometric+identification+scanner;look up to|podziwiać|child+admiring+looking+up+to+older+brother;realise|zdać sobie sprawę|eureka+lightbulb+moment+realization;recognise|rozpoznać|recognizing+friend+waving+hello;remember|pamiętać|remembering+photo+album+nostalgia;remind someone to do something|przypomnieć komuś, by coś zrobił|sticky+note+reminder+alarm;spend money on|wydawać pieniądze na|spending+money+shopping+bags+cash;spot|dostrzec|spotting+bird+watching+binoculars;the complete opposite|całkowite przeciwieństwo|sun+and+moon+opposites+yin+yang;typical of|typowy dla|typical+traditional+british+tea+cup;be part of someone's nature|leżeć w czyjejś naturze|human+nature+instinct+dna+empathy;befriend|zaprzyjaźnić się z|making+friends+handshake+smiling;bizarre|dziwaczny|bizarre+surreal+melting+clocks+art;can't believe your ears|nie móc uwierzyć własnym uszom|shocked+listening+hand+to+ear+disbelief;common experience|częste doznanie|crowd+shared+moment+concert+unity;find common ground|znaleźć wspólną płaszczyznę|two+people+agreement+bridge+harmony;have the time of your life|doskonale się bawić|joyful+friends+dancing+party+confetti;place|rozpoznać, zidentyfikować|detective+recognizing+face+portrait+thinking;pluck up the courage (to do something)|zdobyć się na odwagę (aby coś zrobić)|courage+brave+leap+jumping+cliff;raise questions|nasuwać pytania|raising+question+marks+curiosity+debate;scan|skanować|document+barcode+scanner+laser;sophisticated|skomplikowany, zaawansowany|sophisticated+luxury+watch+mechanism;strike up (a conversation)|nawiązać (rozmowę)|strangers+starting+conversation+chatting+bench";
 
     const rawData = rawPacked.split(';').map(x => x.split('|'));
@@ -935,7 +1158,6 @@
     let auraTimer = 0;
     let deferredPrompt = null;
 
-    // --- DŹWIĘKI ---
     let audioCtx = null;
     let masterGain = null;
 
@@ -999,18 +1221,10 @@
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
         osc.start(now);
         osc.stop(now + 0.22);
-      } else if (type === 'luck') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, now);
-        osc.frequency.exponentialRampToValueAtTime(2000, now + 0.35);
-        gain.gain.setValueAtTime(0.5, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        osc.start(now);
-        osc.stop(now + 0.4);
       }
     }
 
-    // --- CZĄSTECZKI XP I AURY ---
+    // CZĄSTECZKI
     const canvas = document.getElementById('fxCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -1029,9 +1243,7 @@
           vx: (Math.random() - 0.5) * 14,
           vy: (Math.random() - 0.7) * 16,
           size: Math.random() * 9 + 6,
-          color: isMaster 
-            ? (Math.random() > 0.5 ? '#55ff55' : '#ffff55') 
-            : (Math.random() > 0.3 ? '#80ff20' : '#55ff55'),
+          color: isMaster ? (Math.random() > 0.5 ? '#55ff55' : '#ffff55') : (Math.random() > 0.3 ? '#80ff20' : '#55ff55'),
           life: 1.0,
           decay: Math.random() * 0.02 + 0.015,
           text: null
@@ -1045,15 +1257,12 @@
       const rect = wrap.getBoundingClientRect();
       const x = rect.left + Math.random() * rect.width;
       const y = rect.bottom - 10;
-
       let color = '#fff';
       let symbol = null;
 
-      if (auraType === 'hearts') {
-        symbol = '❤️';
-      } else if (auraType === 'cherry') {
-        symbol = '🌸';
-      } else if (auraType === 'runes') {
+      if (auraType === 'hearts') symbol = '❤️';
+      else if (auraType === 'cherry') symbol = '🌸';
+      else if (auraType === 'runes') {
         const glyphs = ['ᔑ', 'ʖ', 'ᓵ', '↸', 'ᒷ', '⎓', '⊣', 'ᔑ', '✨'];
         symbol = glyphs[Math.floor(Math.random() * glyphs.length)];
         color = '#c084fc';
@@ -1133,7 +1342,6 @@
       return Math.min(50, Math.round(5 + (lvl - 1) * 1.61));
     }
 
-    // --- STRUKTURA DANYCH ---
     function initUserCards() {
       return rawData.map((item, index) => ({
         id: index,
@@ -1184,7 +1392,7 @@
       queueCloudSave();
     }
 
-    // --- LOGOWANIE I REJESTRACJA ---
+    // LOGOWANIE
     async function handleAuth(e) {
       e.preventDefault();
       const login = document.getElementById('authLogin').value.trim();
@@ -1192,7 +1400,7 @@
       if (!login || !pass) return;
 
       const submitBtn = document.getElementById('authSubmitBtn');
-      submitBtn.innerText = 'ŁĄCZENIE Z BAZĄ...';
+      submitBtn.innerText = 'ŁĄCZENIE...';
       submitBtn.disabled = true;
 
       await fetchCloudDB();
@@ -1258,7 +1466,7 @@
       if (screenId === 'screenApp') updateStats();
     }
 
-    // --- STATYSTYKI I WYGLĄD ---
+    // STATYSTYKI
     function updateStats() {
       const cntNew = cards.filter(c => c.status === 'new').length;
       const cntOne = cards.filter(c => c.status === 'learning' && c.streak === 1).length;
@@ -1334,7 +1542,7 @@
       document.getElementById('statsModal').classList.remove('active');
     }
 
-    // --- SKLEP I KOSMETYKA ---
+    // SKLEP
     function openShopModal() {
       try {
         const uData = getUserData(currentUser);
@@ -1430,6 +1638,7 @@
       const eq = uData.equipped;
 
       document.body.className = '';
+      if (isDiscoRunning) document.body.classList.add('disco-active');
       if (eq.background && eq.background !== 'default') {
         document.body.classList.add(`theme-${eq.background}`);
       }
@@ -1461,7 +1670,7 @@
       document.getElementById('emeraldCount').innerText = u.emeralds;
     }
 
-    // --- DRAG & DROP ZWIERZAKA ---
+    // DRAG & DROP ZWIERZAKA
     const petEl = document.getElementById('draggablePet');
     let isDragging = false, startX, startY, initLeft, initTop;
 
@@ -1521,7 +1730,7 @@
       }
     }
 
-    // --- LOGIKA FISZEK ---
+    // FISZKI LOGIKA
     function getNextDueCard() {
       const now = Date.now();
       const dueCards = cards.filter(c => c.status === 'learning' && c.due <= now);
@@ -1648,7 +1857,7 @@
 
         if (streakCombo > 0 && streakCombo % 5 === 0) {
           setTimeout(() => {
-            playSound('luck');
+            playSound('master');
             addEmeralds(5);
             spawnXpOrbs(centerX, centerY, 50, true);
             showFloatingText('🌟 LUCKY DROP! +5 🟢!', '#55ffff');
@@ -1669,7 +1878,6 @@
         showFloatingText('⚡ ZAPAMIĘTANE! +2 🟢', '#55ffff');
       }
 
-      // NAGRODA ZA WBICIE POZIOMU
       if (isMasteredNow) {
         const doneCount = cards.filter(c => c.status === 'done').length;
         const currentLevel = Math.floor(doneCount / 10);
@@ -1741,7 +1949,7 @@
       }
     }
 
-    // --- PANEL ADMINA (HASŁO: dupa123) ---
+    // PANEL ADMINA (HASŁO: dupa123)
     function handleSecretAdminClick() {
       secretClicks++;
       clearTimeout(secretTimer);
@@ -1777,9 +1985,52 @@
         if (toggle && cloudDB.settings) {
           toggle.checked = cloudDB.settings.allowRegistration !== false;
         }
+
+        const isDisco = cloudDB.settings && cloudDB.settings.discoMode === true;
+        const btnDisco = document.getElementById('btnAdminDiscoToggle');
+        if (btnDisco) {
+          btnDisco.innerText = isDisco ? 'WYŁĄCZ DYSKOTEKĘ 🛑' : 'WŁĄCZ DYSKOTEKĘ 🪩';
+          btnDisco.className = isDisco ? 'mc-btn mc-btn-red' : 'mc-btn mc-btn-purple';
+        }
+
         renderAdminUserList();
       } else {
         alert('Nieprawidłowe hasło admina!');
+      }
+    }
+
+    // WYSYŁANIE WIADOMOŚCI JAK W ROBLOXIE
+    async function adminSendBroadcast() {
+      const input = document.getElementById('adminBroadcastInput');
+      const msg = input.value.trim();
+      if (!msg) {
+        alert('Wpisz treść ogłoszenia!');
+        return;
+      }
+
+      cloudDB.broadcast = {
+        id: Date.now(),
+        msg: msg,
+        time: Date.now()
+      };
+
+      await pushCloudDB();
+      input.value = '';
+      alert('Wysłano ogłoszenie do wszystkich graczy!');
+    }
+
+    // WŁĄCZANIE / WYŁĄCZANIE DYSKOTEKI
+    async function adminToggleDisco() {
+      if (!cloudDB.settings) cloudDB.settings = {};
+      cloudDB.settings.discoMode = !cloudDB.settings.discoMode;
+      await pushCloudDB();
+
+      const isDisco = cloudDB.settings.discoMode;
+      setDiscoMode(isDisco);
+      const btn = document.getElementById('btnAdminDiscoToggle');
+      if (btn) {
+        btn.innerText = isDisco ? 'WYŁĄCZ DYSKOTEKĘ 🛑' : 'WŁĄCZ DYSKOTEKĘ 🪩';
+        btn.className = isDisco ? 'mc-btn mc-btn-red' : 'mc-btn mc-btn-purple';
       }
     }
 
@@ -1998,6 +2249,11 @@
     window.onload = async () => {
       restorePetPosition();
       await fetchCloudDB();
+
+      // Automatyczne sprawdzanie ogłoszeń i dyskoteki co 7 sekund
+      setInterval(async () => {
+        await fetchCloudDB();
+      }, 7000);
 
       if (window.location.hash === '#admin') {
         showAdminPrompt();
