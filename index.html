@@ -410,15 +410,6 @@
     }
     .volume-box.active { display: flex; }
 
-    .cloud-status {
-      font-size: 0.9rem;
-      padding: 4px 8px;
-      background: #000;
-      color: #ffaa00;
-      border: 1px solid #444;
-      margin-top: 8px;
-    }
-
     @media (min-width: 768px) {
       .mc-box, .screen, header, .xp-section, .card-wrap, .action-row { max-width: 740px; }
       .card-wrap { height: 460px; }
@@ -449,6 +440,7 @@
   <!-- EKRAN LOGOWANIA -->
   <div id="screenAuth" class="screen active">
     <div class="mc-box" style="margin-top: 40px; text-align: center;">
+      <!-- 5x kliknięcie otwiera admina -->
       <h2 style="font-size: 2.3rem; color: #000; margin-bottom: 4px; cursor: default;" onclick="handleSecretAdminClick()">MINECRAFT FISZKI</h2>
       <p style="font-size: 1.2rem; color: #333;">Podaj nick i hasło aby wejść do gry:</p>
       
@@ -457,7 +449,6 @@
         <input type="password" id="authPass" class="auth-input" placeholder="HASŁO" required autocomplete="current-password">
         <button type="submit" id="authSubmitBtn" class="mc-btn mc-btn-green" style="font-size: 1.45rem;">GRAJ / WEJDŹ</button>
       </form>
-      <div id="cloudStatusBadge" class="cloud-status">Łączenie z bazą JSONBin...</div>
     </div>
   </div>
 
@@ -876,7 +867,7 @@
 
   <script>
     // =========================================================================
-    // TWOJE DANE Z JSONBIN.IO ZOSTAŁY WKLEJONE PONIŻEJ:
+    // TWOJE DANE Z JSONBIN.IO (Wklejone na stałe):
     // =========================================================================
     const JSONBIN_BIN_ID = "6ab9038fac6210605afaaa60";
     const JSONBIN_API_KEY = "$2a$10$FcnPo/LpHufmKVhRnsJijug1LyxJsqdi7YOfQXxwFMhf76RcMuO2C";
@@ -895,13 +886,9 @@
         cloudDB = data.record || { settings: { allowRegistration: true }, users: {} };
         if (!cloudDB.users) cloudDB.users = {};
         if (!cloudDB.settings) cloudDB.settings = { allowRegistration: true };
-
-        document.getElementById('cloudStatusBadge').innerText = "🟢 Połączono ze wspólną bazą JSONBin!";
-        document.getElementById('cloudStatusBadge').style.color = "#55ff55";
         return cloudDB;
       } catch (err) {
         console.error("JSONBin error:", err);
-        document.getElementById('cloudStatusBadge').innerText = "🔴 Błąd połączenia z bazą JSONBin!";
         return null;
       }
     }
@@ -929,7 +916,7 @@
       }, 2000);
     }
 
-    // KOMPAKTOWA BAZA 296 SŁÓWEK (aby plik ładował się błyskawicznie)
+    // KOMPAKTOWA BAZA 296 SŁÓWEK
     const rawPacked = "address|adres|postal+address+envelope;age|wiek|age+birthday+cake+candles;date of birth|data urodzenia|date+of+birth+passport+id;divorced|rozwiedziony|divorced+couple+broken+ring;female|kobieta|female+woman+portrait;first name|imię|first+name+hello+badge+nametag;gender|płeć|gender+symbols+male+female;male|mężczyzna|male+man+portrait+face;marital status|stan cywilny|marital+status+form+checkbox;married|żonaty, zamężna|married+couple+wedding+rings;nationality|narodowość|world+passports+nationalities+flags;occupation|zawód|different+occupations+professions+jobs;single|stanu wolnego|single+person+walking+alone;surname|nazwisko|signature+last+name+surname;widowed|owdowiały|widow+mourning+loss+memory;country of residence|kraj zamieszkania|world+map+globe+country+residence;distinguishing features|znaki szczególne|distinguishing+features+face+scar+mole;ethnic origin|pochodzenie etniczne|diverse+ethnic+faces+cultures;next of kin|najbliższy krewny|family+emergency+contact+support;attractive|atrakcyjny|attractive+beautiful+person+smile;beautiful|piękny|beautiful+woman+face+portrait;fit|sprawny, w dobrej formie|fit+athletic+person+jogging;good-looking|przystojny, ładny|good+looking+person+smile;handsome|przystojny|handsome+man+smiling+face;plain (wygląd)|pospolity, nieatrakcyjny|plain+simple+ordinary+person+face;pretty|ładny|pretty+cute+girl+smiling;ugly|brzydki|ugly+funny+creature+face;cut down on sth|ograniczać (ilość czegoś)|cutting+down+sugar+diet+stop;go for (darker colours)|wybierać, sięgać po (ciemniejsze kolory)|dark+colored+clothes+wardrobe+black;paint your nails|malować paznokcie|painting+nails+red+manicure;put on / lose weight|przybierać / tracić na wadze|weight+loss+gain+scale+tape+measure;straighten|prostować (włosy)|straightening+hair+flat+iron;take up (a hobby/a sport)|zacząć (hobby/uprawiać sport)|starting+new+hobby+tennis+painting;fat|gruby|fat+big+belly+man;muscular|muskularny|muscular+bodybuilder+biceps;obese|otyły|obese+weight+scale+measure;overweight/underweight|z nadwagą/niedowagą|overweight+and+underweight+comparison;plump|pulchny, puszysty|plump+chubby+cheeks+face;skinny|chudy|skinny+thin+arms+ribs;slim|szczupły|slim+slender+waist+fit;well-built|dobrze zbudowany|well+built+athletic+male+physique;lanky|tyczkowaty|lanky+tall+thin+man+legs;stocky|krępy|stocky+short+broad+shoulders+man;bald|łysy|bald+man+head+shaved;blond|blond|blonde+hair+woman+portrait;curly|kręcone|curly+hair+curls+hairstyle;dark|ciemny|dark+black+hair+portrait;dyed|farbowane|dyed+colorful+hair+pink+blue;red|rude|redhead+red+hair+freckles;shoulder-length|do ramion|shoulder+length+bob+hairstyle;straight|proste|straight+long+smooth+hair;wavy|falujące|wavy+beach+waves+hair;auburn|kasztanowe|auburn+hair+color+chestnut;fine/thick|cienkie, rzadkie/gęste|fine+hair+vs+thick+hair+density;fringe|grzywka|hair+bangs+fringe+forehead;have a centre/side parting|mieć przedziałek na środku/z boku|hair+middle+parting+side+parting;braid|warkocz|braided+hair+french+braid;ponytail|kucyk|high+ponytail+hairstyle;receding hairline|włosy rzednące na skroniach|receding+hairline+temples+male;wear your hair loose/up|nosić włosy rozpuszczone/spięte|hair+loose+vs+hair+updo+bun;beard|broda|men+full+beard+barber;freckles|piegi|freckles+cheeks+nose+face;moustache|wąsy|men+mustache+moustache+lip;pale/tanned/dark complexion|blada/opalona/ciemna cera|pale+skin+vs+tanned+skin+complexion;pierced ears|przekłute uszy|pierced+ears+earrings+earlobe;scar|blizna|skin+scar+wound+healing;spotty|pryszczaty|acne+spots+face+pimples;tattoo|tatuaż|arm+tattoo+ink+art;wrinkles|zmarszczki|face+wrinkles+aging+eyes;birthmark|znamię|birthmark+skin+pigmentation;clean-shaven|gładko ogolony|clean+shaven+man+smooth+chin;clear skin|gładka skóra|clear+healthy+glowing+skin+face;double chin|podwójny podbródek|double+chin+neck+face;high cheekbones|wystające kości policzkowe|high+cheekbones+female+model+contour;high forehead|wysokie czoło|high+forehead+face+profile;piercing blue eyes|przenikliwe niebieskie oczy|piercing+vibrant+blue+eyes+close+up;blouse|bluzka|women+elegant+silk+blouse;boots|buty|leather+winter+boots+shoes;bra|biustonosz|women+brassiere+bra+lingerie;casual|codzienny, swobodny|casual+outfit+jeans+tshirt;coat|płaszcz|classic+winter+trench+coat;dress|sukienka|women+elegant+dress+fashion;fashionable/trendy|modny|fashionable+trendy+streetwear+style;fleece|bluza polarowa|warm+fleece+jacket+outdoor;gloves|rękawiczki|winter+wool+gloves+hands;hat|kapelusz|classic+fedora+sun+hat;jacket|kurtka|leather+jacket+stylish+zipper;jeans|dżinsy|classic+blue+denim+jeans;jumper|sweter|knitted+cozy+wool+sweater+jumper;old-fashioned|staromodny, staroświecki|old+fashioned+vintage+retro+clothing;pyjamas|piżama|sleepwear+cozy+pajamas+pyjamas;sandals|sandały|summer+leather+sandals+shoes;shirt|koszula|formal+white+dress+shirt+collar;shoes|buty|classic+leather+dress+shoes;shorts|szorty|casual+summer+shorts+denim;skirt|spódnica|women+pleated+fashion+skirt;smart|elegancki|smart+casual+elegant+business+man;socks|skarpety|cotton+socks+colored+feet;suit|garnitur|men+tailored+business+suit+tie;sweatshirt|bluza sportowa|cotton+crewneck+sweatshirt;tie|krawat|silk+necktie+suit+knot;tracksuit|dres|sport+tracksuit+jacket+sweatpants;trainers|obuwie sportowe|running+sneakers+trainers+shoes;trousers|spodnie|formal+tailored+dress+trousers+pants;underwear|bielizna|cotton+boxer+briefs+underwear;waistcoat|kamizelka|formal+suit+waistcoat+vest;wear|nosić, mieć na sobie|person+wearing+stylish+clothes;ballgown|suknia balowa|magnificent+evening+ballgown+dress;boat-necked|z szerokim dekoltem|boat+neckline+dress+top;cardigan|rozpinany sweter|knitted+button+cardigan+sweater;collar|kołnierzyk|shirt+collar+necktie+formal;cuffs|mankiety|shirt+sleeve+cuffs+cufflinks;dressing gown|szlafrok|plush+bathrobe+dressing+gown;high heels|buty na wysokim obcasie|high+heels+stiletto+pumps;hoodie|bluza z kapturem|hooded+sweatshirt+hoodie+pocket;long-sleeved/short-sleeved|z krótkim/długim rękawem (koszula)|long+sleeved+shirt+vs+short+sleeved;strapless top|bluzka bez ramiączek|strapless+tube+top+women;V-neck|dekolt w szpic|v+neck+sweater+collar;belt|pasek|leather+waist+belt+buckle;button|guzik|sewing+round+clothes+button;cap|czapka z daszkiem|baseball+cap+visor+hat;earrings|kolczyki|gold+diamond+earrings+jewelry;glasses|okulary|spectacles+reading+eyeglasses+frames;handbag/bag|torebka|leather+designer+handbag+purse;jewellery|biżuteria|gold+gemstone+jewelry+collection;necklace|naszyjnik|gold+chain+necklace+pendant;ring|pierścionek|diamond+gold+engagement+ring;scarf|szalik|knitted+winter+warm+scarf+neck;tie (dodatki)|krawat|patterned+silk+necktie;bracelet|bransoletka|silver+gold+wrist+bracelet;brooch|broszka|vintage+gemstone+jewelry+brooch+pin;shoe laces|sznurówki|sneakers+tied+shoelaces;slippers|kapcie|cozy+indoor+home+slippers;zip-up|na zamek|metal+zipper+zip+jacket;checked|w kratkę|checked+plaid+gingham+fabric+pattern;cotton|bawełna|natural+raw+cotton+plant+boll;gold|złoto|pure+gold+ingots+bars+shiny;leather|skóra, skórzany|brown+natural+leather+texture;plain (wzór)|gładki|plain+monochrome+fabric+texture;silk|jedwab|smooth+luxurious+silk+satin+fabric;silver|srebrny|shiny+silver+metal+bars;spotted|w kropki|polka+dots+spotted+pattern+fabric;striped|w paski|black+and+white+striped+pattern+lines;tartan|w szkocką kratę|scottish+tartan+kilt+pattern;wool|wełna|natural+sheep+wool+knitting+yarn;elastic|elastyczny|elastic+band+stretch+fabric;fur|futro|fluffy+soft+animal+fur+coat;lacy|koronkowy|white+lace+lacy+fabric+pattern;lined|na podszewce, ocieplany|fleece+lined+jacket+inside+warm;aggressive|agresywny|aggressive+angry+person+shouting;ambitious|ambitny|ambitious+goal+climbing+success;bad-tempered|wybuchowy|bad+tempered+grumpy+frowning+man;big-headed|zarozumiały|arrogant+proud+snob+person;brave|odważny|brave+firefighter+saving+courage;careful/careless|ostrożny/nieostrożny|careful+walking+balance+caution;caring|troskliwy|caring+nurse+comforting+patient;cheerful|radosny, pogodny|cheerful+happy+smiling+joyful+face;clever|mądry|clever+smart+idea+lightbulb+brain;confident/overconfident|pewny siebie/zbyt pewny siebie|confident+business+person+pose;drama queen|panikarz, osoba nadmiernie dramatyzująca|drama+queen+hysterical+overreacting;easygoing|wyluzowany|easygoing+relaxed+chilling+hammock;energetic|energiczny|energetic+jumping+enthusiastic+person;extrovert|ekstrawertyk|extrovert+talking+smiling+crowd+party;friendly|przyjazny|friendly+smile+warm+greeting;fun-loving|lubiący dobrą zabawę|fun+loving+friends+laughing+party;generous|hojny|generous+donation+giving+hands;gentle|łagodny, delikatny|gentle+hand+holding+butterfly;hard-working|pracowity|hard+working+studying+desk+late;helpful/unhelpful|uczynny/nieskory do pomocy|helpful+volunteer+helping+elderly;honest/dishonest|uczciwy/nieuczciwy|honest+hand+on+heart+promise;imaginative/unimaginative|pomysłowy, kreatywny/bez wyobraźni|creative+imagination+artistic+ideas;independent|niezależny|independent+person+mountaintop+freedom;intelligent|inteligentny|intelligent+mind+chess+brain;introvert|introwertyk|introvert+cozy+reading+alone+quiet;lazy|leniwy|lazy+couch+potato+sleeping+sofa;mean|skąpy, złośliwy|mean+evil+laugh+grumpy;messy|nieporządny, bałaganiarski|messy+cluttered+untidy+room;nasty|wstrętny, paskudny, zły, złośliwy|nasty+mean+bully+face;nice|miły|nice+kind+friendly+smile;open|otwarty|open+arms+welcoming+friendly;optimistic/pessimistic|optymistyczny/pesymistyczny|glass+half+full+optimistic;outgoing|towarzyski|outgoing+social+friends+chatting;patient/impatient|cierpliwy/niecierpliwy|patient+waiting+calmly+clock;polite|uprzejmy|polite+gentleman+holding+door+bow;quiet|cichy|quiet+finger+on+lips+silence;helpless|bezradny|helpless+shrugging+confused+person;reliable/unreliable|solidny, niezawodny/niesolidny, zawodny|reliable+trustworthy+handshake+deal;responsible|odpowiedzialny|responsible+checklist+safety+duty;rude|niegrzeczny|rude+impolite+sticking+tongue+out;selfish/unselfish, selfless|samolubny/bezinteresowny|selfish+greedy+taking+all+money;serious|poważny|serious+focused+stern+face;shy|nieśmiały|shy+blushing+girl+timid;silly|głupi|silly+funny+goofy+face;sociable/unsociable|towarzyski/nietowarzyski|sociable+friends+gathering+talking;talkative|gadatliwy|talkative+person+chattering+mouth;tidy/untidy|schludny, porządny/niechlujny|clean+tidy+organized+bedroom;bossy|apodyktyczny|bossy+pointing+finger+demanding+boss;cowardly|tchórzliwy|cowardly+scared+hiding+afraid;eccentric|ekscentryczny|eccentric+quirky+colorful+outfit;materialistic|materialistyczny|materialistic+luxury+money+shopping+bags;modest|skromny|modest+humble+polite+person;moody|humorzasty|moody+mood+swings+frown;odd|dziwny|odd+unusual+strange+object;oddball|dziwak|oddball+weird+quirky+character;sensitive|wrażliwy|sensitive+emotional+crying+tear;sincere|szczery|sincere+warm+genuine+smile;sympathetic|współczujący|sympathetic+comforting+hand+shoulder+empathy;weird|dziwny|weird+bizarre+strange+surreal;weirdo|dziwak|funny+weirdo+bizarre+face;whizzkid|cudowne dziecko|child+prodigy+genius+whizzkid+math;withdrawn|zamknięty w sobie|withdrawn+lonely+person+corner+hoodie;angry, cross|zły, rozgniewany|furious+angry+red+face+screaming;annoyed|zirytowany, rozdrażniony|annoyed+frustrated+rolling+eyes;be in a good mood/bad mood|być w dobrym/złym humorze|happy+smile+vs+angry+mood+face;bored|znudzony|bored+yawning+student+chin+hand;disappointed|rozczarowany|disappointed+sad+person+facepalm;depressed|załamany|depressed+sad+person+darkness;embarrassed|zawstydzony|embarrassed+blushing+awkward+face;excited|podekscytowany|excited+happy+person+cheering;exhausted|wyczerpany|exhausted+tired+worker+sleeping+desk;frightened|przerażony|frightened+scared+wide+eyes+fear;nervous|zdenerwowany|nervous+biting+nails+sweating;pleased|zadowolony|pleased+satisfied+smile+thumbs+up;relaxed|zrelaksowany|relaxed+lounging+spa+resort;scared|przestraszony|scared+hiding+under+blanket;shocked|zszokowany|shocked+jaw+drop+open+mouth;stressed|zestresowany|stressed+headache+hands+on+head;surprised|zaskoczony|surprised+party+gift+happy+face;tired|zmęczony|tired+sleepy+eyes+yawning;upset|przygnębiony, zaniepokojony|upset+crying+troubled+face;worried|zmartwiony|worried+anxious+face+furrowed+brow;amazed|zdumiony, zdziwiony|amazed+astonished+wonder+eyes;delighted|zachwycony|delighted+laughing+pure+joy+smile;nagging feeling|dręczące uczucie|nagging+worry+anxiety+thinking;petrified|przerażony|petrified+frozen+fear+eyes;shattered|zdruzgotany, wykończony|utterly+exhausted+shattered+tired;stunned|oniemiały, osłupiały|stunned+speechless+disbelief+face;worn out|wycieńczony, wyczerpany|worn+out+tired+runner+slumped;adore|uwielbiać|adoring+cute+puppy+love;be a fan of sb/sth|być fanem kogoś/czegoś|stadium+sports+fan+cheering+scarf;be hopeless at|być beznadziejnym w|hopeless+fail+mistake+math;be interested in sth|interesować się czymś|curious+reading+magnifying+glass;be into sth|zajmować się czymś, interesować|passionate+hobby+painting+music;be keen on sth|interesować się, lubić coś robić|eager+enthusiastic+raising+hand;be mad about sb/sth|szaleć za kimś/czymś|crazy+in+love+hearts+eyes;can't stand|nie znosić|disgusted+plugging+nose+dislike;play games/board games|grać w gry/gry planszowe|board+game+dice+pawns+family;work out|trenować, ćwiczyć|gym+workout+lifting+dumbbells;abortion|aborcja|abortion+debate+protest+symbol;charity|dobroczynność, organizacja charytatywna|charity+donation+box+volunteers;drug abuse|zażywanie narkotyków|drug+abuse+pills+addiction+danger;fair trade|sprawiedliwy handel|fair+trade+certified+logo+coffee;homelessness|bezdomność|homeless+person+street+cardboard;unemployment|bezrobocie|unemployed+looking+for+job+sign;corruption|korupcja|political+corruption+bribe+money+handshake;racism|rasizm|stop+racism+equality+diversity+hands;death penalty|kara śmierci|death+penalty+gavel+courtroom+justice;euthanasia|eutanazja|euthanasia+hospital+holding+hand+peace;freedom of speech|wolność słowa|freedom+of+speech+megaphone+protest;gambling|hazard|casino+gambling+roulette+cards+chips;genetic engineering|inżynieria genetyczna|dna+genetic+engineering+crispr;privacy|prywatność|cybersecurity+privacy+lock+padlock;brief|krótki, krótkotrwały|brief+hourglass+sand+running+time;come across|natknąć się na|discovery+finding+treasure+map;complete|całkowity, kompletny|puzzle+complete+final+piece;develop into|rozwinąć się w, stawać się (kimś)|plant+growing+stages+seedling+flower;eco-freak|fanatyk ekologii|eco+activist+recycling+plant+green;fitness maniac|fanatyk ćwiczeń fizycznych|intense+fitness+gym+exercise+body;focus on|skupić się na|target+bullseye+focus+sharp;grow up|dorastać|growing+up+timeline+child+to+adult;have a lot/little in common|mieć dużo/niewiele wspólnego|venn+diagram+shared+common+interests;health nut|osoba mająca obsesję na punkcie zdrowia|healthy+organic+green+smoothie+diet;huge|ogromny|huge+giant+elephant+tiny+mouse;identify|zidentyfikować|fingerprint+biometric+identification+scanner;look up to|podziwiać|child+admiring+looking+up+to+older+brother;realise|zdać sobie sprawę|eureka+lightbulb+moment+realization;recognise|rozpoznać|recognizing+friend+waving+hello;remember|pamiętać|remembering+photo+album+nostalgia;remind someone to do something|przypomnieć komuś, by coś zrobił|sticky+note+reminder+alarm;spend money on|wydawać pieniądze na|spending+money+shopping+bags+cash;spot|dostrzec|spotting+bird+watching+binoculars;the complete opposite|całkowite przeciwieństwo|sun+and+moon+opposites+yin+yang;typical of|typowy dla|typical+traditional+british+tea+cup;be part of someone's nature|leżeć w czyjejś naturze|human+nature+instinct+dna+empathy;befriend|zaprzyjaźnić się z|making+friends+handshake+smiling;bizarre|dziwaczny|bizarre+surreal+melting+clocks+art;can't believe your ears|nie móc uwierzyć własnym uszom|shocked+listening+hand+to+ear+disbelief;common experience|częste doznanie|crowd+shared+moment+concert+unity;find common ground|znaleźć wspólną płaszczyznę|two+people+agreement+bridge+harmony;have the time of your life|doskonale się bawić|joyful+friends+dancing+party+confetti;place|rozpoznać, zidentyfikować|detective+recognizing+face+portrait+thinking;pluck up the courage (to do something)|zdobyć się na odwagę (aby coś zrobić)|courage+brave+leap+jumping+cliff;raise questions|nasuwać pytania|raising+question+marks+curiosity+debate;scan|skanować|document+barcode+scanner+laser;sophisticated|skomplikowany, zaawansowany|sophisticated+luxury+watch+mechanism;strike up (a conversation)|nawiązać (rozmowę)|strangers+starting+conversation+chatting+bench";
 
     const rawData = rawPacked.split(';').map(x => x.split('|'));
@@ -948,7 +935,7 @@
     let auraTimer = 0;
     let deferredPrompt = null;
 
-    // --- SYNTEZA DŹWIĘKÓW ---
+    // --- DŹWIĘKI ---
     let audioCtx = null;
     let masterGain = null;
 
@@ -1146,7 +1133,7 @@
       return Math.min(50, Math.round(5 + (lvl - 1) * 1.61));
     }
 
-    // --- PROFIL I STRUKTURA DANYCH ---
+    // --- STRUKTURA DANYCH ---
     function initUserCards() {
       return rawData.map((item, index) => ({
         id: index,
@@ -1284,6 +1271,7 @@
       document.getElementById('stDue').innerText = cntDue;
 
       const total = cards.length;
+      const percent = ((cntDone / total) * 100).toFixed(1);
       const xpLvl = Math.floor(cntDone / 10);
       const rank = getRank(xpLvl);
 
@@ -1681,12 +1669,13 @@
         showFloatingText('⚡ ZAPAMIĘTANE! +2 🟢', '#55ffff');
       }
 
+      // NAGRODA ZA WBICIE POZIOMU
       if (isMasteredNow) {
         const doneCount = cards.filter(c => c.status === 'done').length;
         const currentLevel = Math.floor(doneCount / 10);
         const u = getUserData(currentUser);
         
-        if (u && currentLevel > (u.highestLevelClaimed || 0)) {
+        if (currentLevel > (u.highestLevelClaimed || 0)) {
           const reward = getLevelReward(currentLevel);
           u.highestLevelClaimed = currentLevel;
           saveUser(currentUser, u);
